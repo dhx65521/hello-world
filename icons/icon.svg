@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD56B"/>
+      <stop offset="1" stop-color="#FF9BAE"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#g)"/>
+  <!-- 彩虹 -->
+  <path d="M96 330 A160 160 0 0 1 416 330" fill="none" stroke="#86BDFF" stroke-width="34" stroke-linecap="round"/>
+  <path d="M136 330 A120 120 0 0 1 376 330" fill="none" stroke="#8FD694" stroke-width="34" stroke-linecap="round"/>
+  <path d="M176 330 A80 80 0 0 1 336 330" fill="none" stroke="#FFFFFF" stroke-width="34" stroke-linecap="round"/>
+  <!-- 星星 -->
+  <polygon fill="#FFFFFF" stroke="#F4B400" stroke-width="10" stroke-linejoin="round"
+    points="256,150 279,216 349,216 293,258 314,326 256,286 198,326 219,258 163,216 233,216"/>
+  <!-- 笑脸云 -->
+  <ellipse cx="256" cy="372" rx="120" ry="48" fill="#FFFFFF"/>
+  <circle cx="220" cy="366" r="9" fill="#4A3F35"/>
+  <circle cx="292" cy="366" r="9" fill="#4A3F35"/>
+  <path d="M232 388 Q256 406 280 388" fill="none" stroke="#4A3F35" stroke-width="9" stroke-linecap="round"/>
+</svg>
