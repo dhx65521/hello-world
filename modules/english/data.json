@@ -1,0 +1,76 @@
+{
+  "_说明": "英文模块内容。letters=字母（sound 是给语音读的近似发音），cvc=拼读单词，categories=单词卡分类。",
+  "letters": [
+    { "l": "A", "sound": "ah", "word": "apple", "zh": "苹果", "emoji": "🍎" },
+    { "l": "B", "sound": "buh", "word": "ball", "zh": "球", "emoji": "⚽" },
+    { "l": "C", "sound": "kuh", "word": "cat", "zh": "猫", "emoji": "🐱" },
+    { "l": "D", "sound": "duh", "word": "dog", "zh": "狗", "emoji": "🐶" },
+    { "l": "E", "sound": "eh", "word": "egg", "zh": "鸡蛋", "emoji": "🥚" },
+    { "l": "F", "sound": "fuh", "word": "fish", "zh": "鱼", "emoji": "🐟" },
+    { "l": "G", "sound": "guh", "word": "goat", "zh": "山羊", "emoji": "🐐" },
+    { "l": "H", "sound": "huh", "word": "hat", "zh": "帽子", "emoji": "🎩" },
+    { "l": "I", "sound": "ih", "word": "igloo", "zh": "冰屋", "emoji": "🏔️" },
+    { "l": "J", "sound": "juh", "word": "jam", "zh": "果酱", "emoji": "🍓" },
+    { "l": "K", "sound": "kuh", "word": "kite", "zh": "风筝", "emoji": "🪁" },
+    { "l": "L", "sound": "luh", "word": "lion", "zh": "狮子", "emoji": "🦁" },
+    { "l": "M", "sound": "muh", "word": "moon", "zh": "月亮", "emoji": "🌙" },
+    { "l": "N", "sound": "nuh", "word": "nose", "zh": "鼻子", "emoji": "👃" },
+    { "l": "O", "sound": "aw", "word": "octopus", "zh": "章鱼", "emoji": "🐙" },
+    { "l": "P", "sound": "puh", "word": "pig", "zh": "猪", "emoji": "🐷" },
+    { "l": "Q", "sound": "kwuh", "word": "queen", "zh": "王后", "emoji": "👸" },
+    { "l": "R", "sound": "ruh", "word": "rabbit", "zh": "兔子", "emoji": "🐰" },
+    { "l": "S", "sound": "suh", "word": "sun", "zh": "太阳", "emoji": "☀️" },
+    { "l": "T", "sound": "tuh", "word": "tiger", "zh": "老虎", "emoji": "🐯" },
+    { "l": "U", "sound": "uh", "word": "umbrella", "zh": "雨伞", "emoji": "☂️" },
+    { "l": "V", "sound": "vuh", "word": "van", "zh": "面包车", "emoji": "🚐" },
+    { "l": "W", "sound": "wuh", "word": "water", "zh": "水", "emoji": "💧" },
+    { "l": "X", "sound": "ks", "word": "box", "zh": "盒子", "emoji": "📦" },
+    { "l": "Y", "sound": "yuh", "word": "yellow", "zh": "黄色", "emoji": "🟡" },
+    { "l": "Z", "sound": "zuh", "word": "zebra", "zh": "斑马", "emoji": "🦓" }
+  ],
+  "cvc": [
+    { "w": "cat", "zh": "猫", "emoji": "🐱" }, { "w": "dog", "zh": "狗", "emoji": "🐶" }, { "w": "sun", "zh": "太阳", "emoji": "☀️" },
+    { "w": "pig", "zh": "猪", "emoji": "🐷" }, { "w": "hat", "zh": "帽子", "emoji": "🎩" }, { "w": "bed", "zh": "床", "emoji": "🛏️" },
+    { "w": "cup", "zh": "杯子", "emoji": "🥤" }, { "w": "bus", "zh": "公共汽车", "emoji": "🚌" }, { "w": "fox", "zh": "狐狸", "emoji": "🦊" },
+    { "w": "hen", "zh": "母鸡", "emoji": "🐔" }, { "w": "pen", "zh": "笔", "emoji": "🖊️" }, { "w": "bug", "zh": "虫子", "emoji": "🐛" },
+    { "w": "map", "zh": "地图", "emoji": "🗺️" }, { "w": "box", "zh": "盒子", "emoji": "📦" }, { "w": "bag", "zh": "包", "emoji": "👜" },
+    { "w": "jam", "zh": "果酱", "emoji": "🍓" }, { "w": "web", "zh": "蜘蛛网", "emoji": "🕸️" }, { "w": "van", "zh": "面包车", "emoji": "🚐" },
+    { "w": "top", "zh": "陀螺", "emoji": "🪀" }, { "w": "net", "zh": "网", "emoji": "🥅" }, { "w": "mud", "zh": "泥巴", "emoji": "🟫" },
+    { "w": "leg", "zh": "腿", "emoji": "🦵" }, { "w": "six", "zh": "六", "emoji": "6️⃣" }, { "w": "red", "zh": "红色", "emoji": "🔴" }
+  ],
+  "categories": [
+    { "id": "animals", "name": "动物", "emoji": "🐾", "words": [
+      { "en": "cat", "zh": "猫", "emoji": "🐱" }, { "en": "dog", "zh": "狗", "emoji": "🐶" }, { "en": "bird", "zh": "鸟", "emoji": "🐦" },
+      { "en": "fish", "zh": "鱼", "emoji": "🐟" }, { "en": "rabbit", "zh": "兔子", "emoji": "🐰" }, { "en": "lion", "zh": "狮子", "emoji": "🦁" },
+      { "en": "elephant", "zh": "大象", "emoji": "🐘" }, { "en": "monkey", "zh": "猴子", "emoji": "🐵" }, { "en": "duck", "zh": "鸭子", "emoji": "🦆" },
+      { "en": "cow", "zh": "牛", "emoji": "🐮" }, { "en": "pig", "zh": "猪", "emoji": "🐷" }, { "en": "bear", "zh": "熊", "emoji": "🐻" }
+    ] },
+    { "id": "food", "name": "食物", "emoji": "🍎", "words": [
+      { "en": "apple", "zh": "苹果", "emoji": "🍎" }, { "en": "banana", "zh": "香蕉", "emoji": "🍌" }, { "en": "egg", "zh": "鸡蛋", "emoji": "🥚" },
+      { "en": "milk", "zh": "牛奶", "emoji": "🥛" }, { "en": "bread", "zh": "面包", "emoji": "🍞" }, { "en": "rice", "zh": "米饭", "emoji": "🍚" },
+      { "en": "cake", "zh": "蛋糕", "emoji": "🍰" }, { "en": "water", "zh": "水", "emoji": "💧" }, { "en": "orange", "zh": "橙子", "emoji": "🍊" },
+      { "en": "grapes", "zh": "葡萄", "emoji": "🍇" }, { "en": "carrot", "zh": "胡萝卜", "emoji": "🥕" }, { "en": "cookie", "zh": "饼干", "emoji": "🍪" }
+    ] },
+    { "id": "colors", "name": "颜色", "emoji": "🎨", "words": [
+      { "en": "red", "zh": "红色", "emoji": "🔴" }, { "en": "blue", "zh": "蓝色", "emoji": "🔵" }, { "en": "yellow", "zh": "黄色", "emoji": "🟡" },
+      { "en": "green", "zh": "绿色", "emoji": "🟢" }, { "en": "orange", "zh": "橙色", "emoji": "🟠" }, { "en": "purple", "zh": "紫色", "emoji": "🟣" },
+      { "en": "black", "zh": "黑色", "emoji": "⚫" }, { "en": "white", "zh": "白色", "emoji": "⚪" }, { "en": "brown", "zh": "棕色", "emoji": "🟤" }
+    ] },
+    { "id": "body", "name": "身体", "emoji": "🙂", "words": [
+      { "en": "eye", "zh": "眼睛", "emoji": "👁️" }, { "en": "ear", "zh": "耳朵", "emoji": "👂" }, { "en": "nose", "zh": "鼻子", "emoji": "👃" },
+      { "en": "mouth", "zh": "嘴巴", "emoji": "👄" }, { "en": "hand", "zh": "手", "emoji": "✋" }, { "en": "foot", "zh": "脚", "emoji": "🦶" },
+      { "en": "leg", "zh": "腿", "emoji": "🦵" }, { "en": "tooth", "zh": "牙齿", "emoji": "🦷" }, { "en": "tongue", "zh": "舌头", "emoji": "👅" }
+    ] },
+    { "id": "family", "name": "家人", "emoji": "👨‍👩‍👧", "words": [
+      { "en": "mom", "zh": "妈妈", "emoji": "👩" }, { "en": "dad", "zh": "爸爸", "emoji": "👨" }, { "en": "baby", "zh": "宝宝", "emoji": "👶" },
+      { "en": "grandma", "zh": "奶奶", "emoji": "👵" }, { "en": "grandpa", "zh": "爷爷", "emoji": "👴" }, { "en": "boy", "zh": "男孩", "emoji": "👦" },
+      { "en": "girl", "zh": "女孩", "emoji": "👧" }, { "en": "family", "zh": "家人", "emoji": "👨‍👩‍👧" }
+    ] },
+    { "id": "things", "name": "常见物品", "emoji": "🚗", "words": [
+      { "en": "car", "zh": "汽车", "emoji": "🚗" }, { "en": "bus", "zh": "公共汽车", "emoji": "🚌" }, { "en": "train", "zh": "火车", "emoji": "🚂" },
+      { "en": "plane", "zh": "飞机", "emoji": "✈️" }, { "en": "boat", "zh": "船", "emoji": "⛵" }, { "en": "bike", "zh": "自行车", "emoji": "🚲" },
+      { "en": "ball", "zh": "球", "emoji": "⚽" }, { "en": "book", "zh": "书", "emoji": "📖" }, { "en": "house", "zh": "房子", "emoji": "🏠" },
+      { "en": "tree", "zh": "树", "emoji": "🌳" }, { "en": "flower", "zh": "花", "emoji": "🌸" }, { "en": "star", "zh": "星星", "emoji": "⭐" }
+    ] }
+  ]
+}

@@ -3,8 +3,17 @@
 给 3–6 岁孩子用的学习小网页，家庭自用、不上架、不商用。
 纯静态网页（HTML + CSS + JavaScript），没有后端、不登录、不上传任何数据；做成了 PWA，可以添加到 iPad 主屏幕全屏打开，断网也能用。
 
-五个模块：中文 🀄 · 英文 🔤 · 数学 🔢 · 编程 🤖 · 圣经 📖
-（目前 **数学** 已完成，其余四个为“准备中”占位页，会逐个补上。）
+五个模块（都已有第一版，内容会继续打磨）：
+
+| 模块 | 活动 |
+| --- | --- |
+| 🀄 中文 | 拼音点读（声母 / 韵母）、识字卡（70 个常用字 + 配图 + 读音）、听音找字、笔顺描红（hanzi-writer，手指 / Apple Pencil 都能写） |
+| 🔤 英文 | 字母点读（大小写 + 示例词）、字母发音、CVC 拼读、单词配图卡（6 类）、听音选图 |
+| 🔢 数学 | 认数字、数数（手指点数）、比大小、认形状、10 以内加减法 |
+| 🤖 编程 | 网格迷宫 10 关：点选或拖动方向箭头排成指令，按“开始”让小动物走；第 7 关起引入“重复 N 次”积木 |
+| 📖 圣经 | 5 个故事绘本（创造天地、挪亚方舟、约拿、大卫与歌利亚、耶稣爱小孩，幼儿语言重讲 + 语音朗读）、背金句小游戏（13 句，中文和合本 / 英文 KJV） |
+
+iPad 横屏体验最好，iPhone 横屏、竖屏也做了适配。
 
 ## 在 iPad 上怎么用
 
@@ -57,15 +66,29 @@ js/
   parent.js             家长区
 modules/
   math/index.js         数学模块（认数字、数数、比大小、认形状、加减法）
-  math/data.json        数学内容数据：物品、形状、每轮题数
-  chinese/ english/ coding/ bible/   其余模块（待做）
+  math/data.json        数学内容：物品、形状、每轮题数
+  chinese/index.js      中文模块（拼音、识字卡、听音找字、笔顺描红）
+  chinese/data.json     中文内容：声母、韵母、识字卡
+  english/index.js      英文模块（字母、发音、拼读、单词卡、听音选图）
+  english/data.json     英文内容：字母、CVC 单词、单词分类
+  coding/index.js       编程模块（网格迷宫）
+  coding/levels.json    关卡数据
+  bible/index.js        圣经模块（故事绘本、背金句）
+  bible/stories.json    故事内容（每页 emoji 场景 + 文字 + 结尾经文）
+  bible/verses.json     金句（和合本 + KJV）
+vendor/hanzi-writer/    笔顺库 hanzi-writer（MIT）+ 所用汉字的笔画数据（Arphic 公共许可），全部本地打包
 icons/                  图标（icon.svg 为源文件，PNG 由脚本生成）
 tools/build.js          生成 sw-assets.js（缓存清单 + 版本号）
 tools/make-icons.js     由 icon.svg 生成 PNG 图标
 ```
 
 ## 自己加内容
-- 数学的物品、形状在 `modules/math/data.json` 里，按现有格式增删即可；`roundLength` 是每轮题数，`countMax` 是数数上限。
+- 每个模块的内容都在它自己目录下的 JSON 里，照着现有格式增删即可：
+  - 数学 `modules/math/data.json`：物品、形状；`roundLength` 每轮题数，`countMax` 数数上限。
+  - 中文 `modules/chinese/data.json`：声母 / 韵母（`say` 是用来朗读的同音字）、识字卡。新增识字卡的字时，把对应的 `字.json` 笔画数据放进 `vendor/hanzi-writer/data/`（可从 npm 包 `hanzi-writer-data` 复制），描红才能用。
+  - 英文 `modules/english/data.json`：字母（`sound` 是给语音读的近似发音，可按效果调整）、CVC 拼读单词、单词分类。
+  - 编程 `modules/coding/levels.json`：关卡（网格大小、起点终点、障碍、可用积木、积木格数、提示语）。
+  - 圣经 `modules/bible/stories.json`、`verses.json`：故事页和金句。
 - 每次改完文件，提交前在电脑上运行一次 `node tools/build.js`，更新离线缓存清单和版本号（忘了也没关系，只是新文件要联网才能第一次加载）。
 
 ## 技术说明

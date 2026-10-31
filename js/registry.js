@@ -5,7 +5,7 @@ import english from '../modules/english/index.js';
 import coding from '../modules/coding/index.js';
 import bible from '../modules/bible/index.js';
 
-export const APP_VERSION = '0.1.0';
+export const APP_VERSION = '0.2.0';
 
 export const MODULES = [chinese, english, math, coding, bible];
 

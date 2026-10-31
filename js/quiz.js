@@ -2,7 +2,7 @@
 // 各模块只需要提供 makeQuestion()，返回一道题。
 import { h, screen, speakerButton, sleep } from './ui.js';
 import * as sound from './sound.js';
-import { sayZh, say, stop as stopSpeech } from './speech.js';
+import { sayZh, say, saySequence, stop as stopSpeech } from './speech.js';
 import { recordAnswer, recordRound, starBurstAt, encouragement, tryAgainText, showRoundSummary } from './rewards.js';
 
 /**
@@ -27,7 +27,8 @@ export function runQuiz({ title, moduleId, activityId, count = 5, makeQuestion, 
 
   const speakCurrent = () => {
     if (!current) return;
-    say(current.speak, { lang: current.speakLang || 'zh-CN' });
+    if (Array.isArray(current.speak)) saySequence(current.speak);
+    else say(current.speak, { lang: current.speakLang || 'zh-CN' });
   };
 
   const ui = screen({
@@ -75,7 +76,11 @@ export function runQuiz({ title, moduleId, activityId, count = 5, makeQuestion, 
       }
       sound.gentle();
       const hint = current.wrongHint?.(value);
-      await sayZh(hint ? `${hint}，${tryAgainText()}` : tryAgainText());
+      if (hint && typeof hint === 'object') {
+        await saySequence([hint, { text: tryAgainText(), lang: 'zh-CN' }]);
+      } else {
+        await sayZh(hint ? `${hint}，${tryAgainText()}` : tryAgainText());
+      }
       locked = false;
     }
   }

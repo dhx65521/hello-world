@@ -8,6 +8,7 @@ const DEFAULTS = () => ({
   },
   stars: 0,               // 累计星星
   modules: {},            // modules[moduleId][activityId] = { rounds, correct, total, stars }
+  extra: {},              // 模块自定义进度（如编程已解锁关卡、看过的故事）
   updatedAt: 0,
 });
 
@@ -16,7 +17,7 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (!raw) return DEFAULTS();
     const data = JSON.parse(raw);
-    return { ...DEFAULTS(), ...data, settings: { ...DEFAULTS().settings, ...(data.settings || {}) } };
+    return { ...DEFAULTS(), ...data, settings: { ...DEFAULTS().settings, ...(data.settings || {}) }, extra: data.extra || {} };
   } catch (e) {
     return DEFAULTS();
   }

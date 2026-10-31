@@ -7,7 +7,11 @@ export function h(tag, attrs = {}, ...children) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v == null || v === false) continue;
     if (k === 'class') el.className = v;
-    else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+    else if (k === 'style' && typeof v === 'object') {
+      for (const [sk, sv] of Object.entries(v)) {
+        if (sk.startsWith('--')) el.style.setProperty(sk, sv); else el.style[sk] = sv;
+      }
+    }
     else if (k === 'html') el.innerHTML = v;
     else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
     else if (k === 'dataset') Object.assign(el.dataset, v);
@@ -124,4 +128,26 @@ export function choicesAround(answer, lo, hi, count = 3) {
   }
   while (set.size < Math.min(count, hi - lo + 1)) set.add(randInt(lo, hi));
   return shuffle([...set]);
+}
+
+/** 动态加载一个本地脚本（只加载一次） */
+const loadedScripts = {};
+export function loadScript(src) {
+  if (!loadedScripts[src]) {
+    loadedScripts[src] = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = src;
+      el.onload = resolve;
+      el.onerror = () => reject(new Error('无法加载 ' + src));
+      document.head.append(el);
+    });
+  }
+  return loadedScripts[src];
+}
+
+/** 读取模块目录下的 JSON（相对 import.meta.url） */
+export async function loadJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('无法读取 ' + url);
+  return res.json();
 }
