@@ -1,0 +1,18 @@
+{
+  "_说明": "背金句小游戏用的经文。中文和合本（chunks 是拆成的小段，孩子按顺序点），英文 KJV。",
+  "verses": [
+    { "ref": "创世记 1:1", "zh": "起初，神创造天地。", "chunks": ["起初", "神", "创造", "天地"], "refEn": "Genesis 1:1", "en": "In the beginning God created the heaven and the earth.", "emoji": "🌍" },
+    { "ref": "约翰一书 4:8", "zh": "神就是爱。", "chunks": ["神", "就是", "爱"], "refEn": "1 John 4:8", "en": "God is love.", "emoji": "💕" },
+    { "ref": "诗篇 23:1", "zh": "耶和华是我的牧者，我必不致缺乏。", "chunks": ["耶和华", "是我的牧者", "我必", "不致缺乏"], "refEn": "Psalm 23:1", "en": "The LORD is my shepherd; I shall not want.", "emoji": "🐑" },
+    { "ref": "帖撒罗尼迦前书 5:16", "zh": "要常常喜乐。", "chunks": ["要", "常常", "喜乐"], "refEn": "1 Thessalonians 5:16", "en": "Rejoice evermore.", "emoji": "😄" },
+    { "ref": "帖撒罗尼迦前书 5:17", "zh": "不住地祷告。", "chunks": ["不住地", "祷告"], "refEn": "1 Thessalonians 5:17", "en": "Pray without ceasing.", "emoji": "🙏" },
+    { "ref": "帖撒罗尼迦前书 5:18", "zh": "凡事谢恩。", "chunks": ["凡事", "谢恩"], "refEn": "1 Thessalonians 5:18", "en": "In every thing give thanks.", "emoji": "🙌" },
+    { "ref": "以弗所书 6:1", "zh": "你们作儿女的，要在主里听从父母。", "chunks": ["你们作儿女的", "要在主里", "听从父母"], "refEn": "Ephesians 6:1", "en": "Children, obey your parents in the Lord.", "emoji": "👨‍👩‍👧" },
+    { "ref": "腓立比书 4:13", "zh": "我靠着那加给我力量的，凡事都能做。", "chunks": ["我靠着", "那加给我力量的", "凡事", "都能做"], "refEn": "Philippians 4:13", "en": "I can do all things through Christ which strengtheneth me.", "emoji": "💪" },
+    { "ref": "诗篇 119:105", "zh": "你的话是我脚前的灯，是我路上的光。", "chunks": ["你的话", "是我脚前的灯", "是我路上的光"], "refEn": "Psalm 119:105", "en": "Thy word is a lamp unto my feet, and a light unto my path.", "emoji": "🏮" },
+    { "ref": "箴言 3:5", "zh": "你要专心仰赖耶和华，不可倚靠自己的聪明。", "chunks": ["你要专心", "仰赖耶和华", "不可倚靠", "自己的聪明"], "refEn": "Proverbs 3:5", "en": "Trust in the LORD with all thine heart; and lean not unto thine own understanding.", "emoji": "❤️" },
+    { "ref": "诗篇 56:3", "zh": "我惧怕的时候要倚靠你。", "chunks": ["我惧怕的时候", "要倚靠你"], "refEn": "Psalm 56:3", "en": "What time I am afraid, I will trust in thee.", "emoji": "🛡️" },
+    { "ref": "诗篇 136:1", "zh": "你们要称谢耶和华，因他本为善，他的慈爱永远长存。", "chunks": ["你们要称谢耶和华", "因他本为善", "他的慈爱", "永远长存"], "refEn": "Psalm 136:1", "en": "O give thanks unto the LORD; for he is good: for his mercy endureth for ever.", "emoji": "🌈" },
+    { "ref": "马可福音 10:14", "zh": "让小孩子到我这里来，不要禁止他们。", "chunks": ["让小孩子", "到我这里来", "不要", "禁止他们"], "refEn": "Mark 10:14", "en": "Suffer the little children to come unto me, and forbid them not.", "emoji": "🤗" }
+  ]
+}

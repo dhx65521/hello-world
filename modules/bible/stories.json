@@ -1,0 +1,64 @@
+{
+  "_说明": "圣经故事绘本。每个故事 4–6 页：scene 是大图（emoji），bg 是背景风格（sky/night/sea/land/storm/sunset/garden），text 是朗读的文字。verse 是结尾的经文：中文和合本，英文 KJV。",
+  "stories": [
+    {
+      "id": "creation", "title": "创造天地", "emoji": "🌍",
+      "pages": [
+        { "bg": "night", "scene": "🌑✨", "text": "很久很久以前，什么都没有，到处黑黑的。神说：要有光！于是就有了光。" },
+        { "bg": "sky", "scene": "☀️☁️🌙⭐", "text": "神造了天空，造了太阳、月亮和星星。白天亮亮的，晚上有星星眨眼睛。" },
+        { "bg": "sea", "scene": "🌊🐟🐳🐬", "text": "神造了大海，海里有小鱼、大鲸鱼和海豚，游来游去。" },
+        { "bg": "garden", "scene": "🌳🌸🐘🦁🐰", "text": "神造了大树和花朵，造了大象、狮子和小兔子。" },
+        { "bg": "sunset", "scene": "👨👩💕", "text": "最后，神造了人，就像你和我。神看着一切，说：真好！" },
+        { "bg": "sky", "scene": "😴🌈", "text": "第七天，神休息了。神爱他造的一切，也最爱你。" }
+      ],
+      "verse": { "ref": "创世记 1:1", "zh": "起初，神创造天地。", "refEn": "Genesis 1:1", "en": "In the beginning God created the heaven and the earth." }
+    },
+    {
+      "id": "noah", "title": "挪亚方舟", "emoji": "🚢",
+      "pages": [
+        { "bg": "land", "scene": "👴🙏", "text": "有一个爱神的老爷爷，叫挪亚。神对他说：挪亚，造一条很大很大的船吧！" },
+        { "bg": "land", "scene": "🔨🪵🚢", "text": "挪亚和家人叮叮当当，造了好多年，终于造好了大方舟。" },
+        { "bg": "land", "scene": "🐘🦒🐒🐧🦓", "text": "动物们两个两个地走进方舟：大象、长颈鹿、小猴子、企鹅……" },
+        { "bg": "storm", "scene": "🌧️⛈️🚢🌊", "text": "哗啦哗啦，大雨下了四十天。方舟稳稳地漂在水上，大家都平平安安。" },
+        { "bg": "sky", "scene": "🕊️🌿", "text": "雨停了，挪亚放出一只鸽子。鸽子叼回一片叶子，陆地出现啦！" },
+        { "bg": "sunset", "scene": "🌈🐘🦒👴", "text": "神在天上画了一道彩虹，说：我永远记得我的约定。" }
+      ],
+      "verse": { "ref": "创世记 9:13", "zh": "我把虹放在云彩中，这就可作我与地立约的记号了。", "refEn": "Genesis 9:13", "en": "I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth." }
+    },
+    {
+      "id": "jonah", "title": "约拿和大鱼", "emoji": "🐳",
+      "pages": [
+        { "bg": "land", "scene": "🧔🙉", "text": "神对约拿说：去尼尼微城，告诉他们要改好。可是约拿不想去，他偷偷跑掉了。" },
+        { "bg": "sea", "scene": "⛵🧔", "text": "约拿坐上一条船，往反方向走。他以为可以躲开神。" },
+        { "bg": "storm", "scene": "⛈️🌊⛵", "text": "海上刮起大风，船摇来摇去。约拿说：是我不听话，把我放到海里吧。" },
+        { "bg": "sea", "scene": "🐳🧔", "text": "神派来一条大鱼，一口把约拿吞进肚子里。约拿在鱼肚子里待了三天。" },
+        { "bg": "sea", "scene": "🙏💭", "text": "约拿在鱼肚子里祷告：神啊，对不起，我愿意听你的话。" },
+        { "bg": "sunset", "scene": "🏙️🧔🗣️", "text": "大鱼把约拿吐到岸上。约拿去了尼尼微，城里的人都改好了。神真有耐心！" }
+      ],
+      "verse": { "ref": "约拿书 2:9", "zh": "救恩出于耶和华。", "refEn": "Jonah 2:9", "en": "Salvation is of the LORD." }
+    },
+    {
+      "id": "david", "title": "大卫和歌利亚", "emoji": "🪨",
+      "pages": [
+        { "bg": "land", "scene": "👦🐑🎵", "text": "大卫是一个放羊的小男孩。他爱神，喜欢弹琴唱歌。" },
+        { "bg": "land", "scene": "🦍⚔️😱", "text": "有一个巨人叫歌利亚，又高又大。大家看见他都害怕得发抖。" },
+        { "bg": "land", "scene": "👦💪🙏", "text": "大卫说：我不怕！神和我在一起。" },
+        { "bg": "land", "scene": "🪨🪨🪨🪨🪨", "text": "大卫没有穿盔甲，只在小河边捡了五颗光滑的小石头。" },
+        { "bg": "sunset", "scene": "👦🪨💨🦍", "text": "大卫用甩石带甩出一颗小石头，嗖——巨人倒下了！" },
+        { "bg": "sky", "scene": "🎉👦🙌", "text": "大家都欢呼起来。有神帮助，小小的人也能做大大的事！" }
+      ],
+      "verse": { "ref": "诗篇 56:3", "zh": "我惧怕的时候要倚靠你。", "refEn": "Psalm 56:3", "en": "What time I am afraid, I will trust in thee." }
+    },
+    {
+      "id": "children", "title": "耶稣爱小孩", "emoji": "🤗",
+      "pages": [
+        { "bg": "land", "scene": "👨‍👩‍👧‍👦👶🚶", "text": "有一天，许多爸爸妈妈带着小朋友来找耶稣，想让耶稣为他们祝福。" },
+        { "bg": "land", "scene": "✋😠", "text": "门徒说：别过来，耶稣很忙，不要打扰他！" },
+        { "bg": "sky", "scene": "🧔💛👧👦", "text": "耶稣说：让小孩子到我这里来，不要拦着他们！" },
+        { "bg": "garden", "scene": "🤗👶👧👦", "text": "耶稣把小朋友抱在怀里，把手放在他们头上，为他们祝福。" },
+        { "bg": "sunset", "scene": "💕🧒🧒🧒", "text": "耶稣爱每一个小朋友，也爱你。你是耶稣的宝贝！" }
+      ],
+      "verse": { "ref": "马可福音 10:14", "zh": "让小孩子到我这里来，不要禁止他们。", "refEn": "Mark 10:14", "en": "Suffer the little children to come unto me, and forbid them not." }
+    }
+  ]
+}
