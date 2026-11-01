@@ -8,6 +8,7 @@ import { homeScene } from './scenes/home.js';
 import { mathScene } from './scenes/math.js';
 import { bagScene } from './scenes/bag.js';
 import { parentScene } from './scenes/parent.js';
+import { shopScene } from './scenes/shop.js';
 
 register('setup', setupScene);
 register('kids', kidsScene);
@@ -15,6 +16,7 @@ register('newKid', newKidScene);
 register('home', homeScene);
 register('math', mathScene);
 register('bag', bagScene);
+register('shop', shopScene);
 register('parent', parentScene);
 
 let unlocked = false;
