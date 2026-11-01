@@ -6,6 +6,8 @@ import * as audio from '../core/audio.js';
 import { coinChip, refreshCoins, muteButton } from '../core/widgets.js';
 import { flyCoins, burst, shake, pop } from '../core/fx.js';
 import { loadModel, recognize } from '../ml/digits.js';
+import { t } from '../core/i18n.js';
+import * as limits from '../core/limits.js';
 
 let rules = null;
 
@@ -13,12 +15,12 @@ export async function mathScene() {
   const kid = currentKid();
   if (!kid) return go('kids');
   audio.stopMusic();
-  const ui = scene({ title: '🧮 数学', theme: 'math', left: button('🏠', () => confirmQuit(), 'icon'), right: [coinChip(), muteButton()] });
-  const loading = h('div', { class: 'hint center' }, '准备中…');
+  const ui = scene({ title: t('math'), theme: 'math', left: button('🏠', () => confirmQuit(), 'icon'), right: [coinChip(), muteButton()] });
+  const loading = h('div', { class: 'hint center' }, t('preparing'));
   ui.body.append(loading);
   try {
     [rules] = await Promise.all([rules || loadJSON(new URL('../../data/math.json', import.meta.url)), loadModel()]);
-  } catch (e) { loading.textContent = '加载失败，请联网后重试。'; return; }
+  } catch (e) { loading.textContent = t('loadFail'); return; }
   loading.remove();
 
   // ---------- 状态 ----------
@@ -38,9 +40,9 @@ export async function mathScene() {
   const recog = h('div', { class: 'recog' }, '　');
   const boxes = [makeBox(), makeBox()];
   const clearBtn = button('🧹', () => { clearPad(); audio.sfx('erase'); }, 'icon round clear-btn');
-  clearBtn.setAttribute('aria-label', '擦掉重写');
+  clearBtn.setAttribute('aria-label', 'clear');
   const padRow = h('div', { class: 'pad-row' }, boxes[0].el, boxes[1].el, clearBtn);
-  const padPanel = h('div', { class: 'pad-panel' }, h('div', { class: 'pad-title' }, '✍️ 把答案写在这里，写完停一下就会自动判断'), recog, padRow);
+  const padPanel = h('div', { class: 'pad-panel' }, h('div', { class: 'pad-title' }, t('padTitle')), recog, padRow);
   ui.body.append(h('div', { class: 'math-layout' }, qPanel, padPanel));
 
   // ---------- 手写板 ----------
@@ -102,7 +104,7 @@ export async function mathScene() {
     if (!running || busy || !q) return;
     const ans = readAnswer();
     if (!ans) return;
-    if (ans.lowConf) { recog.textContent = `${ans.text}？再写清楚一点 ✏️`; recog.classList.add('warn'); audio.sfx('pop'); return; }
+    if (ans.lowConf) { recog.textContent = t('unclear', { text: ans.text }); recog.classList.add('warn'); audio.sfx('pop'); return; }
     recog.classList.remove('warn');
     recog.textContent = ans.text;
     await judge(ans.value);
@@ -132,7 +134,7 @@ export async function mathScene() {
     clearPad();
     renderScore();
   }
-  const renderScore = () => { score.textContent = `答对 ${stats.correct} · 答题 ${stats.answered}`; };
+  const renderScore = () => { score.textContent = t('score', { c: stats.correct, a: stats.answered }); };
 
   // ---------- 判定 ----------
   async function judge(value) {
@@ -141,7 +143,7 @@ export async function mathScene() {
     if (value === q.ans) {
       stats.correct += 1; stats.net += reward; stats.earned += reward;
       addCoins(reward);
-      feedback.textContent = `✅ 对啦！ +${reward}`; feedback.className = 'q-feedback good';
+      feedback.textContent = t('correct', { n: reward }); feedback.className = 'q-feedback good';
       audio.sfx('correct'); burst(padPanel, ['⭐', '✨', '🌟'], 10);
       await flyCoins(padPanel, document.getElementById('coin-chip'), reward);
       audio.sfx('coin'); refreshCoins();
@@ -152,7 +154,7 @@ export async function mathScene() {
       attempts += 1;
       shake(qPanel); audio.sfx('wrong');
       if (attempts === 1) {
-        feedback.textContent = '再想一想，再写一次 ✏️';
+        feedback.textContent = t('tryAgain');
         feedback.className = 'q-feedback bad';
         await sleep(600);
         clearPad();
@@ -160,7 +162,7 @@ export async function mathScene() {
       } else {
         qText.textContent = `${q.a} ${q.op === '-' ? '−' : '+'} ${q.b} = ${q.ans}`;
         qText.classList.add('answer');
-        feedback.textContent = `答案是 ${q.ans}，记住了吗？`; feedback.className = 'q-feedback bad';
+        feedback.textContent = t('answerIs', { n: q.ans }); feedback.className = 'q-feedback bad';
         await sleep(rules.wrongShowAnswerMs || 1800);
         busy = false; if (running) nextQuestion();
       }
@@ -170,6 +172,7 @@ export async function mathScene() {
   // ---------- 计时 ----------
   function startRound() {
     running = true; ended = false; remaining = total;
+    limits.consume('math');
     timerEl.textContent = fmtTime(remaining);
     audio.music('math');
     boxes.forEach((b) => b.resize());
@@ -192,30 +195,30 @@ export async function mathScene() {
     audio.sfx('fanfare');
     showOverlay(h('div', { class: 'dialog summary' },
       h('div', { class: 'big-emoji' }, stats.net > 0 ? '🎉' : '🙂'),
-      h('div', { class: 'dialog-title' }, '时间到！'),
+      h('div', { class: 'dialog-title' }, t('timeUp')),
       h('div', { class: 'sum-grid' },
-        h('div', {}, h('b', {}, stats.answered), h('span', {}, '答题')),
-        h('div', {}, h('b', {}, stats.correct), h('span', {}, '答对')),
-        h('div', {}, h('b', {}, stats.wrong), h('span', {}, '答错')),
-        h('div', { class: 'gold' }, h('b', {}, (stats.net >= 0 ? '+' : '') + stats.net), h('span', {}, '🪙 金币')),
+        h('div', {}, h('b', {}, stats.answered), h('span', {}, t('answered'))),
+        h('div', {}, h('b', {}, stats.correct), h('span', {}, t('right'))),
+        h('div', {}, h('b', {}, stats.wrong), h('span', {}, t('wrong'))),
+        h('div', { class: 'gold' }, h('b', {}, (stats.net >= 0 ? '+' : '') + stats.net), h('span', {}, t('coinsLabel'))),
       ),
-      h('div', { class: 'hint' }, `现在一共有 🪙 ${currentKid().coins}`),
-      h('div', { class: 'row' }, button('🔁 再来一局', () => { hideOverlay(); mathScene(); }, 'primary big'), button('🏠 回家', () => { hideOverlay(); go('home'); }, 'big')),
+      h('div', { class: 'hint' }, t('nowHave', { n: currentKid().coins })),
+      h('div', { class: 'row' }, limits.remaining('math') > 0 ? button(t('again'), () => { hideOverlay(); mathScene(); }, 'primary big') : null, button(t('goHome'), () => { hideOverlay(); go('home'); }, 'big')),
     ));
   }
   function confirmQuit() {
     if (!running) { stopTimer(); return go('home'); }
-    dialog({ emoji: '🏠', title: '要结束这一局吗？', body: h('div', { class: 'hint' }, '已经赚到的金币会保留。'), buttons: [
-      { label: '结束', cls: 'primary', onClick: () => endRound() },
-      { label: '继续做题', cls: 'soft' }] });
+    dialog({ emoji: '🏠', title: t('quitRound'), body: h('div', { class: 'hint' }, t('coinsKept')), buttons: [
+      { label: t('end'), cls: 'primary', onClick: () => endRound() },
+      { label: t('keepGoing'), cls: 'soft' }] });
   }
 
   // 开始前的提示
   showOverlay(h('div', { class: 'dialog' },
     h('div', { class: 'big-emoji' }, '✏️'),
-    h('div', { class: 'dialog-title' }, `${fmtTime(total)} 倒计时`),
-    h('div', { class: 'hint' }, `答对一题 +${reward} 🪙，答错不扣，可以再写一次。两位数写两格，一位数写一格就行。`),
-    button('▶ 开始！', () => { hideOverlay(); startRound(); }, 'primary big'),
+    h('div', { class: 'dialog-title' }, t('countdown', { time: fmtTime(total) })),
+    h('div', { class: 'hint' }, t('mathIntro', { n: reward })),
+    button(t('start'), () => { hideOverlay(); startRound(); }, 'primary big'),
   ));
   window.addEventListener('resize', () => boxes.forEach((b) => b.resize()), { once: false });
 }

@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 // 农场生长逻辑（纯函数，不碰界面）。
 // 一块地：null 或 { seed, plantedAt, stage(0..4), stageStartedAt, needsWater, bug, weeds, penalty }
 // 生长分 4 段（stage 0→1→2→3→4），每段开始时需要浇水，没浇水 / 有草时不长。
@@ -75,11 +76,11 @@ export function harvestYield(plot, seed) {
 /** 格式化剩余时间 */
 export function fmtRemaining(ms) {
   const s = Math.ceil(ms / 1000);
-  if (s < 60) return `${s} 秒`;
+  if (s < 60) return t('sec', { n: s });
   const m = Math.ceil(s / 60);
-  if (m < 60) return `${m} 分钟`;
+  if (m < 60) return t('min', { n: m });
   const hh = Math.floor(m / 60), mm = m % 60;
-  if (hh < 24) return mm ? `${hh} 小时 ${mm} 分` : `${hh} 小时`;
+  if (hh < 24) return mm ? t('hourMin', { h: hh, m: mm }) : t('hour', { n: hh });
   const d = Math.floor(hh / 24);
-  return `${d} 天 ${hh % 24} 小时`;
+  return t('dayHour', { d, h: hh % 24 });
 }

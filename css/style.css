@@ -359,3 +359,7 @@ button, input { font-family: inherit; color: inherit; }
   .home-menu { flex-direction: row; }
   .home-btn { flex: 1 1 30%; }
 }
+.home-btn .lbl { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+.home-btn .sub { font-size: 15px; font-weight: 600; opacity: .85; white-space: nowrap; }
+.home-btn.dim { opacity: .7; }
+@media (max-width: 520px) { .home-btn .lbl { align-items: center; } .home-btn .sub { font-size: 11px; } }

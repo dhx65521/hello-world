@@ -13,6 +13,8 @@ const DEFAULT_SETTINGS = () => ({
   roundSeconds: 300,     // 每局时长
   rewardCoins: 1,        // 答对 +N
   timeScale: 1,          // 农场时间倍速（测试模式用，60 = 1 分钟当 1 小时）
+  dailyLimit: 2,         // 每天最多开始几局数学（0 = 不限）
+  lang: 'zh',            // 界面语言 zh / en
 });
 
 const DEFAULTS = () => ({
