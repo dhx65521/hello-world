@@ -8,6 +8,7 @@ import { burst, flyCoins, pop, shake } from '../core/fx.js';
 import { plantSvg } from '../core/plants.js';
 import * as F from '../core/farmlogic.js';
 import * as R from '../core/room.js';
+import * as FI from '../core/farmiso.js';
 import { t, name as nm } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
 import { loadFactoryData, readyCount } from './factory.js';
@@ -40,18 +41,14 @@ export async function homeScene() {
   const ui = scene({ title: '', theme: 'farm', left: kidChip(() => { stop(); go('kids'); }), right: [coinChip(), muteButton(), gear] });
 
   // ---------- 农场板 ----------
-  const grid = h('div', { class: 'farm-grid' });
-  const plotEls = [];
-  for (let i = 0; i < 8; i++) {
-    const el = h('div', { class: 'plot', dataset: { i } });
-    el.addEventListener('click', () => onPlotTap(i));
-    plotEls.push(el); grid.append(el);
-  }
-  const board = h('div', { class: 'farm-board' },
+  const field = h('div', { class: 'farm-field' });
+  field.addEventListener('click', (e) => { const g = e.target.closest('.plot-iso'); if (g) onPlotTap(Number(g.dataset.i)); });
+  const board = h('div', { class: 'farm-board iso' },
     h('div', { class: 'farm-sky' }, h('span', { class: 'sun' }, '☀️'), h('span', { class: 'cloud c1' }, '☁️'), h('span', { class: 'cloud c2' }, '☁️'), h('span', { class: 'bird' }, '🐦')),
-    grid,
-    h('div', { class: 'fence' }),
+    field,
   );
+  const plotEl = (i) => field.querySelector(`.plot-iso[data-i="${i}"]`) || field;
+  const svgRoot = () => field.querySelector('svg');
 
   // ---------- 房间 ----------
   const roomEl = h('div', { class: 'room-board' });
@@ -90,24 +87,17 @@ export async function homeScene() {
   const inv = () => currentKid().inventory;
   const room = () => currentKid().room;
 
-  function renderPlot(i) {
-    const el = plotEls[i]; const p = plots()[i];
-    el.innerHTML = '';
-    el.className = 'plot' + (selected === i ? ' selected' : '');
-    const soil = h('div', { class: 'soil' + (p && !p.needsWater ? ' wet' : '') });
-    el.append(soil);
-    if (!p) { el.append(h('div', { class: 'plot-hint' }, '＋')); return; }
-    const seed = seedById(p.seed);
-    el.append(h('div', { class: 'plant', html: plantSvg(seed, p.stage) }));
-    if (p.weeds > 0) el.append(h('div', { class: 'weeds' }, ...Array.from({ length: p.weeds }, (_, k) => h('span', { class: 'weed w' + k }, '🌿'))));
-    if (p.bug) el.append(h('span', { class: 'bug' }, '🐛'));
-    if (F.isRipe(p)) { el.classList.add('ripe'); el.append(h('span', { class: 'badge ripe-badge' }, '✨')); }
-    else if (p.needsWater) el.append(h('span', { class: 'badge water-badge' }, '💧'));
-    else if (p.weeds > 0) el.append(h('span', { class: 'badge' }, '🌿'));
-    else el.append(h('span', { class: 'badge ring', style: { '--p': Math.round(F.stageProgress(p, seed, Date.now(), scale()) * 100) } }, '⏳'));
+  function renderFarm() {
+    const now = Date.now();
+    const info = plots().map((p) => {
+      if (!p) return { p: null };
+      const seed = seedById(p.seed);
+      return { p, seed, prog: F.stageProgress(p, seed, now, scale()), ripe: F.isRipe(p), blocked: F.isBlocked(p) };
+    });
+    field.innerHTML = FI.renderFarm(info, { selected });
   }
   const renderRoom = () => { roomEl.innerHTML = R.renderRoom(room(), { selected: selFurn, moving }); };
-  const renderAll = () => { for (let i = 0; i < 8; i++) renderPlot(i); renderRoom(); renderPanel(); };
+  const renderAll = () => { renderFarm(); renderRoom(); renderPanel(); };
 
   function renderPanel() {
     panel.innerHTML = '';
@@ -169,22 +159,20 @@ export async function homeScene() {
     const seed = seedById(seedId);
     updateKid((k) => { k.inventory.seeds[seedId] -= 1; k.farm.plots[i] = F.newPlot(seedId, Date.now()); });
     audio.sfx('dig');
-    const el = plotEls[i]; renderAll();
-    const drop = h('span', { class: 'seed-drop' }, '🌰'); el.append(drop);
-    await sleep(500); drop.remove(); audio.sfx('plant'); pop(el);
+    renderAll();
+    FI.fxInPlot(svgRoot(), i, FI.seedFx(i), 600);
+    await sleep(500); audio.sfx('plant');
     toast(t('planted', { seed: nm(seed) }));
   }
   async function water(i) {
-    const el = plotEls[i];
     updateKid((k) => { k.farm.plots[i] = F.water(k.farm.plots[i], Date.now()); });
     audio.sfx('water');
-    const can = h('span', { class: 'can' }, '🚿'); const drops = h('div', { class: 'drops' }, ...Array.from({ length: 6 }, (_, k) => h('span', { style: { '--k': k } }, '💧')));
-    el.append(can, drops);
-    await sleep(900); can.remove(); drops.remove();
     renderAll();
+    FI.fxInPlot(svgRoot(), i, FI.waterFx(i), 1000);
+    await sleep(900);
   }
   function pullWeed(i) {
-    const el = plotEls[i];
+    const el = plotEl(i);
     updateKid((k) => { k.farm.plots[i] = F.pullWeed(k.farm.plots[i], Date.now()); });
     audio.sfx('whoosh');
     const w = el.querySelector('.weed'); if (w) { w.classList.add('pulled'); setTimeout(() => renderAll(), 350); } else renderAll();
@@ -192,19 +180,19 @@ export async function homeScene() {
   }
   function spray(i) {
     if (!inv().items.pesticide) return;
-    const el = plotEls[i];
+    const el = plotEl(i);
     updateKid((k) => { k.inventory.items.pesticide -= 1; k.farm.plots[i] = F.spray(k.farm.plots[i]); });
     audio.sfx('spray');
     const bug = el.querySelector('.bug'); if (bug) bug.classList.add('flee');
-    const mist = h('span', { class: 'mist' }, '🧴'); el.append(mist);
-    setTimeout(() => { mist.remove(); renderAll(); burst(el, ['✨'], 5); }, 700);
+    FI.fxInPlot(svgRoot(), i, FI.sprayFx(i), 700);
+    setTimeout(() => { renderAll(); burst(plotEl(i), ['✨'], 5); }, 700);
   }
   function fertilize(i) {
     if (!inv().items.fertilizer) return;
-    const el = plotEls[i]; const seed = seedById(plots()[i].seed);
+    const el = plotEl(i); const seed = seedById(plots()[i].seed);
     updateKid((k) => { k.inventory.items.fertilizer -= 1; k.farm.plots[i] = F.fertilize(k.farm.plots[i], seed, Date.now()); });
     audio.sfx('sparkle'); burst(el, ['✨', '💛', '🌟'], 12);
-    setTimeout(() => { tickAll(true); pop(el); }, 400);
+    setTimeout(() => { tickAll(true); }, 400);
   }
   async function harvest(i) {
     const p = plots()[i]; const seed = seedById(p.seed);
@@ -217,7 +205,7 @@ export async function homeScene() {
       for (const s of farmData.seeds) if (s.unlock > 0 && s.unlock === k.farm.harvests) unlockedNow.push(s);
     });
     audio.sfx('harvest');
-    const el = plotEls[i];
+    const el = plotEl(i);
     burst(el, [seed.emoji, '✨'], 10);
     await flyCoins(el, bagBtn, n, seed.emoji);
     pop(bagBtn);
@@ -357,7 +345,7 @@ export async function homeScene() {
       if (evs.includes('bug')) audio.sfx('bug');
       renderAll();
     } else if (!force) {
-      plots().forEach((p, i) => { if (p && !F.isBlocked(p) && !F.isRipe(p)) { const b = plotEls[i].querySelector('.badge.ring'); if (b) b.style.setProperty('--p', Math.round(F.stageProgress(p, seedById(p.seed), now, scale()) * 100)); } });
+      plots().forEach((p, i) => { if (p && !F.isBlocked(p) && !F.isRipe(p)) { const ring = field.querySelector(`[data-ring="${i}"]`); if (ring) { const c = Number(ring.dataset.c); ring.setAttribute('stroke-dashoffset', (c * (1 - F.stageProgress(p, seedById(p.seed), now, scale()))).toFixed(1)); } } });
       if (selected != null) renderPanel();
     }
   }

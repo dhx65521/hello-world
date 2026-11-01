@@ -449,3 +449,28 @@ button, input { font-family: inherit; color: inherit; }
 @media (max-width: 520px), ((orientation: portrait) and (max-width: 900px)) { .home-left { max-width: none; width: 100%; } }
 /* 右侧按钮列吸顶（横屏） */
 @media (min-width: 761px) and (min-height: 521px) and (orientation: landscape) { .home-side { position: sticky; top: 0; align-self: flex-start; } }
+
+/* ========== 2.5D 菜地 ========== */
+.farm-board.iso { background: linear-gradient(#BDE8FF 0%, #E3F6FF 40%, #CFF0B8 40%, #B9E59C 100%); }
+.farm-board.iso .farm-sky { background: transparent; height: clamp(30px, 4vh, 48px); }
+.farm-field { padding: 0 12px 10px; }
+.farm-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.farm-svg .plot-iso { cursor: pointer; }
+.farm-svg .plot-iso:active { filter: brightness(1.06); }
+.farm-svg text { pointer-events: none; }
+.farm-svg .plant-svg { transform-box: fill-box; }
+.farm-svg .badge-iso { pointer-events: none; }
+.farm-svg .ripe-glow { animation: glowstroke 1.4s ease-in-out infinite; }
+.farm-svg .bob { transform-box: fill-box; transform-origin: center; animation: bob 1s ease-in-out infinite; }
+.farm-svg .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 1s ease-in-out infinite; }
+.farm-svg .bug { transform-box: fill-box; transform-origin: center; animation: crawl-svg 2.4s ease-in-out infinite; }
+.farm-svg .bug.flee { animation: flee .7s ease-in forwards; }
+.farm-svg .weed { transform-box: fill-box; transform-origin: center; transition: transform .3s, opacity .3s; }
+.farm-svg .weed.pulled { transform: translateY(-30px) rotate(40deg); opacity: 0; }
+.farm-svg .fx-can { transform-box: fill-box; transform-origin: center; animation: tilt .9s ease-in-out; }
+.farm-svg .fx-drop { transform-box: fill-box; transform-origin: center; animation: drop-svg .7s ease-in forwards; opacity: 0; }
+.farm-svg .fx-seed { transform-box: fill-box; transform-origin: center; animation: seeddrop-svg .5s ease-in forwards; }
+@keyframes glowstroke { 0%,100% { stroke-opacity: .5; } 50% { stroke-opacity: 1; } }
+@keyframes crawl-svg { 0% { transform: translateX(0) scaleX(1); } 45% { transform: translateX(22px) scaleX(1); } 50% { transform: translateX(22px) scaleX(-1); } 95% { transform: translateX(0) scaleX(-1); } 100% { transform: translateX(0) scaleX(1); } }
+@keyframes drop-svg { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(38px); opacity: 0; } }
+@keyframes seeddrop-svg { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(40px) scale(.4); opacity: 0; } }
