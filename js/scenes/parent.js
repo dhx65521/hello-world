@@ -47,8 +47,7 @@ export function parentScene() {
   wrap.append(kidsSec);
 
   wrap.append(seg('⏱️ 数学每局时长', [[180, '3 分钟'], [300, '5 分钟'], [480, '8 分钟'], [600, '10 分钟']], () => setting('roundSeconds'), (v) => setSetting('roundSeconds', v)));
-  wrap.append(seg('🪙 答对奖励', [[1, '+1'], [2, '+2'], [3, '+3']], () => setting('rewardCoins'), (v) => setSetting('rewardCoins', v)));
-  wrap.append(seg('➖ 答错扣除', [[0, '不扣'], [1, '−1'], [2, '−2'], [3, '−3']], () => setting('penaltyCoins'), (v) => setSetting('penaltyCoins', v), '一局内金币最低扣到 0；答错后有一次重写机会，第二次答对 +奖励、再错不再扣。'));
+  wrap.append(seg('🪙 答对奖励', [[1, '+1'], [2, '+2'], [3, '+3']], () => setting('rewardCoins'), (v) => setSetting('rewardCoins', v), '答错不扣金币，可以再写一次；第二次答对也有奖励，再错就显示答案进入下一题。'));
   wrap.append(seg('🧪 农场时间（测试模式）', [[1, '正常'], [10, '快 10 倍'], [60, '快 60 倍'], [600, '快 600 倍']], () => setting('timeScale'), (v) => setSetting('timeScale', v), '正常模式下番茄 1 小时成熟、火龙果 2 天；测试模式用来快速推演。'));
 
   // 存档

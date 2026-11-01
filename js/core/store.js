@@ -12,7 +12,6 @@ const DEFAULT_SETTINGS = () => ({
   muted: false,
   roundSeconds: 300,     // 每局时长
   rewardCoins: 1,        // 答对 +N
-  penaltyCoins: 2,       // 答错 −N
   timeScale: 1,          // 农场时间倍速（测试模式用，60 = 1 分钟当 1 小时）
 });
 
