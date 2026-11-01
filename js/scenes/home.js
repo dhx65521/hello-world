@@ -54,7 +54,8 @@ export async function homeScene() {
   const roomEl = h('div', { class: 'room-board' });
   roomEl.addEventListener('click', onRoomTap);
   const roomTitle = h('div', { class: 'room-title' }, `🛏️ ${t('room')}`);
-  const roomWrap = h('div', { class: 'room-wrap' }, roomTitle, roomEl);
+  const roomSky = h('div', { class: 'farm-sky room-sky' }, h('span', { class: 'sun' }, '☀️'), h('span', { class: 'cloud c1' }, '☁️'), h('span', { class: 'cloud c2' }, '☁️'), h('span', { class: 'bird' }, '🐦'), h('span', { class: 'butterfly' }, '🦋'));
+  const roomWrap = h('div', { class: 'room-wrap' }, roomSky, roomTitle, roomEl);
 
   // ---------- 右侧 ----------
   const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, t('bag'))], () => { stop(); go('bag'); }, 'home-btn');

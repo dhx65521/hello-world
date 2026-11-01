@@ -474,3 +474,19 @@ button, input { font-family: inherit; color: inherit; }
 @keyframes crawl-svg { 0% { transform: translateX(0) scaleX(1); } 45% { transform: translateX(22px) scaleX(1); } 50% { transform: translateX(22px) scaleX(-1); } 95% { transform: translateX(0) scaleX(-1); } 100% { transform: translateX(0) scaleX(1); } }
 @keyframes drop-svg { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(38px); opacity: 0; } }
 @keyframes seeddrop-svg { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(40px) scale(.4); opacity: 0; } }
+
+/* ========== 房间外布景 ========== */
+.room-wrap { position: relative; overflow: hidden; background: linear-gradient(#BDE8FF 0%, #E3F6FF 42%, #CFF0B8 42%, #B9E59C 100%); padding: 0 14px 10px; }
+.room-sky { height: clamp(34px, 5vh, 56px); background: transparent; position: relative; }
+.room-title { position: absolute; left: 14px; top: 8px; z-index: 2; background: rgba(255,255,255,.75); border-radius: 999px; padding: 4px 12px; font-size: 16px; }
+.room-board { position: relative; z-index: 1; padding: 6px 4% 0; }
+.farm-sky .butterfly { position: absolute; left: 30%; top: 40%; font-size: 20px; animation: flutter 7s ease-in-out infinite; }
+.room-svg .sway { transform-box: fill-box; transform-origin: 50% 95%; animation: sway 3.4s ease-in-out infinite; }
+.room-svg .bob-slow { transform-box: fill-box; transform-origin: center; animation: bob 2.6s ease-in-out infinite; }
+.room-svg .glow { transform-box: fill-box; transform-origin: center; animation: glowpulse 2.2s ease-in-out infinite; }
+.room-svg .pulse-slow { transform-box: fill-box; transform-origin: center; animation: pulse 3s ease-in-out infinite; }
+.room-svg .win-cloud { transform-box: fill-box; transform-origin: center; animation: wincloud 9s ease-in-out infinite; }
+@keyframes flutter { 0% { transform: translate(0,0) rotate(0); } 25% { transform: translate(60px,-14px) rotate(10deg); } 50% { transform: translate(140px,4px) rotate(-8deg); } 75% { transform: translate(70px,14px) rotate(6deg); } 100% { transform: translate(0,0) rotate(0); } }
+@keyframes glowpulse { 0%,100% { opacity: .22; transform: scale(.9); } 50% { opacity: .42; transform: scale(1.08); } }
+@keyframes wincloud { 0%,100% { transform: translateX(-9px); } 50% { transform: translateX(9px); } }
+@media (max-width: 760px), (max-height: 520px) { .room-title { font-size: 13px; padding: 2px 8px; } .farm-sky .butterfly { font-size: 14px; } }

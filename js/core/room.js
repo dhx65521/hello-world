@@ -61,14 +61,19 @@ export function renderRoom(room, { selected = null, moving = false } = {}) {
   const [minX] = proj(0, rows, 0), [maxX] = proj(cols, 0, 0);
   const top = -WALL_H - 10, [, bottom] = proj(cols, rows, 0);
   const w = maxX - minX + 20, hgt = bottom - top + 20;
-  let s = `<svg viewBox="${minX - 10} ${top} ${w} ${hgt}" xmlns="http://www.w3.org/2000/svg" class="room-svg">${patternDefs()}`;
+  let s = `<svg viewBox="${minX - 10} ${top} ${w + 0} ${hgt + 14}" xmlns="http://www.w3.org/2000/svg" class="room-svg">${patternDefs()}`;
+  // 地面投影（房间像一个小模型浮在草地上）
+  { const [cx, cy] = proj(cols / 2, rows / 2, 0); s += `<ellipse cx="${cx}" cy="${cy + 14}" rx="${(cols + rows) * T * 0.27}" ry="${(cols + rows) * T * 0.13}" fill="rgba(60,90,40,.18)"/>`; }
+  s += poly([proj(0, 0, 0), proj(cols, 0, 0), proj(cols, rows, 0), proj(0, rows, 0)], '#B88A5C'); // 地板底座
+  s += poly([proj(0, rows, 0), proj(cols, rows, 0), proj(cols, rows, -10), proj(0, rows, -10)], '#A6774B') + poly([proj(cols, 0, 0), proj(cols, rows, 0), proj(cols, rows, -10), proj(cols, 0, -10)], '#8F6540');
   // 墙
   s += poly([proj(0, 0, WALL_H), proj(0, rows, WALL_H), proj(0, rows, 0), proj(0, 0, 0)], 'url(#wall-dots)', 'stroke="#D8D2F0" stroke-width="1"');
   s += poly([proj(0, 0, WALL_H), proj(cols, 0, WALL_H), proj(cols, 0, 0), proj(0, 0, 0)], '#EFEAFF', 'stroke="#D8D2F0" stroke-width="1"');
   // 踢脚线
   s += poly([proj(0, 0, 8), proj(0, rows, 8), proj(0, rows, 0), proj(0, 0, 0)], '#D9CDBE') + poly([proj(0, 0, 8), proj(cols, 0, 8), proj(cols, 0, 0), proj(0, 0, 0)], '#CDBFAE');
   // 窗户（右墙）
-  s += wallRect('right', 1.2, 2.8, 50, 100, '#BDE8FF', 'stroke="#fff" stroke-width="4"') + wallRect('right', 1.95, 2.05, 50, 100, '#fff') + emojiAt(wallCenter('right', 1.2, 2.8, 75), '☀️', 18);
+  { const wa = cols * 0.3, wb = cols * 0.62, mid = (wa + wb) / 2;
+    s += wallRect('right', wa, wb, 50, 100, '#BDE8FF', 'stroke="#fff" stroke-width="4"') + emojiAt(wallCenter('right', wa, wb, 84), '☀️', 16, 'class="pulse-slow"') + emojiAt(wallCenter('right', wa, wb, 62), '☁️', 14, 'class="win-cloud"') + wallRect('right', mid - 0.04, mid + 0.04, 50, 100, '#fff') + wallRect('right', wa, wb, 74, 77, '#fff'); }
   // 墙上挂件
   for (const wItem of room.wall) {
     const def = itemDef(wItem.item); if (!def) continue;
@@ -99,7 +104,7 @@ export function renderRoom(room, { selected = null, moving = false } = {}) {
     const sel = selected === p.uid;
     s += `<g class="room-item${sel ? ' selected' : ''}" data-uid="${p.uid}">`;
     if (sel) s += poly([proj(p.x, p.y), proj(p.x + pw, p.y), proj(p.x + pw, p.y + pd), proj(p.x, p.y + pd)], 'rgba(255,217,61,.45)', 'stroke="#FFD93D" stroke-width="3"');
-    s += draw(B, { sheet: room.sheet });
+    s += draw(B, { sheet: room.sheet, center: (u, v, z) => proj(p.x + (p.rot % 2 ? v : u) * 1, p.y + (p.rot % 2 ? u : v) * 1, z) });
     s += `</g>`;
   }
   s += '</svg>';

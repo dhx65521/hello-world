@@ -1,7 +1,7 @@
 {
   "_说明": "儿童房家具。type：floor 地面家具（w、d 是占几格），wall 墙上挂件，sheet 床单花色（换到床上）。variant 决定画法。",
   "floor": {
-    "cols": 4,
+    "cols": 5,
     "rows": 4
   },
   "items": [
