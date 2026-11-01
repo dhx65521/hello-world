@@ -1,5 +1,5 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = '4bb20ef01c';
+self.__VERSION = 'e8793ac2cc';
 self.__ASSETS = [
   "./",
   "./css/style.css",
@@ -16,6 +16,8 @@ self.__ASSETS = [
   "./js/core/avatars.js",
   "./js/core/farmlogic.js",
   "./js/core/fx.js",
+  "./js/core/i18n.js",
+  "./js/core/limits.js",
   "./js/core/plants.js",
   "./js/core/router.js",
   "./js/core/store.js",

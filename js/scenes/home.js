@@ -7,6 +7,9 @@ import { coinChip, muteButton, kidChip } from '../core/widgets.js';
 import { burst, flyCoins, pop, shake } from '../core/fx.js';
 import { plantSvg } from '../core/plants.js';
 import * as F from '../core/farmlogic.js';
+import { t, name as nm } from '../core/i18n.js';
+import * as limits from '../core/limits.js';
+import { requirePin } from '../core/widgets.js';
 
 let farmData = null;
 export async function loadFarmData() {
@@ -15,6 +18,7 @@ export async function loadFarmData() {
 }
 export const seedById = (id) => farmData?.seeds.find((s) => s.id === id);
 export const itemById = (id) => farmData?.items.find((s) => s.id === id);
+export const stageName = (i) => (document.documentElement.lang === 'en' ? farmData.stageNamesEn : farmData.stageNames)[i];
 
 export async function homeScene() {
   const kid0 = currentKid();
@@ -24,7 +28,7 @@ export async function homeScene() {
   const cfg = farmData.events;
   const scale = () => Number(setting('timeScale')) || 1;
 
-  const gear = h('button', { class: 'gear', 'aria-label': '家长区（长按）' }, h('span', { class: 'ring' }), '⚙️');
+  const gear = h('button', { class: 'gear', 'aria-label': t('parentArea') }, h('span', { class: 'ring' }), '⚙️');
   longPress(gear, 2500, () => { stop(); go('parent'); }, (p) => gear.style.setProperty('--p', Math.round(p * 100)));
   const ui = scene({ title: '', theme: 'farm', left: kidChip(() => { stop(); go('kids'); }), right: [coinChip(), muteButton(), gear] });
 
@@ -43,12 +47,21 @@ export async function homeScene() {
   );
 
   // ---------- 右侧 ----------
-  const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, '仓库')], () => { stop(); go('bag'); }, 'home-btn');
+  const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, t('bag'))], () => { stop(); go('bag'); }, 'home-btn');
+  const left = limits.remaining('math');
+  const mathSub = left === Infinity ? null : h('small', { class: 'sub' }, left > 0 ? t('leftToday', { n: left }) : t('noneLeftToday'));
   const menu = h('div', { class: 'home-menu' },
-    button([h('span', { class: 'emoji' }, '🧮'), h('span', {}, '做数学 赚金币')], () => { stop(); go('math'); }, 'home-btn primary'),
-    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, '种子商店')], () => { stop(); go('shop'); }, 'home-btn'),
+    button([h('span', { class: 'emoji' }, '🧮'), h('span', { class: 'lbl' }, h('span', {}, t('doMath')), mathSub)], () => startMath(), 'home-btn primary' + (left === 0 ? ' dim' : '')),
+    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shop'))], () => { stop(); go('shop'); }, 'home-btn'),
     bagBtn,
   );
+  function startMath() {
+    if (limits.remaining('math') > 0) { stop(); return go('math'); }
+    audio.sfx('wrong');
+    dialog({ emoji: '🌙', title: t('dailyUsedUp'), body: h('div', { class: 'hint' }, t('dailyUsedUpHint', { n: limits.dailyLimit() })), buttons: [
+      { label: t('parentUnlock'), cls: 'soft', onClick: () => requirePin(() => { limits.grantBonus(1); toast(t('unlockedRound')); stop(); go('math'); }, t('unlockOnce')) },
+      { label: t('tomorrow'), cls: 'primary' }] });
+  }
   const panel = h('div', { class: 'plot-panel' });
   ui.body.append(h('div', { class: 'home-layout farm-layout' }, board, h('div', { class: 'home-side' }, menu, panel)));
 
@@ -79,24 +92,24 @@ export async function homeScene() {
     panel.innerHTML = '';
     if (selected == null) {
       const need = plots().filter((p) => p && (p.needsWater || p.weeds > 0 || p.bug || F.isRipe(p))).length;
-      panel.append(h('div', { class: 'panel-hint' }, need ? `有 ${need} 块地需要照顾 👀` : '点一块地开始种东西吧 🌱'));
+      panel.append(h('div', { class: 'panel-hint' }, need ? t('needCare', { n: need }) : t('tapToPlant')));
       return;
     }
     const i = selected, p = plots()[i];
-    if (!p) { panel.append(h('div', { class: 'panel-hint' }, '这块地空着，点一下可以种种子'), button('🌱 种点什么', () => openSeedPicker(i), 'primary')); return; }
+    if (!p) { panel.append(h('div', { class: 'panel-hint' }, t('emptyPlot')), button(t('plantSomething'), () => openSeedPicker(i), 'primary')); return; }
     const seed = seedById(p.seed);
     const now = Date.now();
     const prog = F.stageProgress(p, seed, now, scale());
-    const status = F.isRipe(p) ? '成熟啦，快收获！' : p.weeds > 0 ? '长草了，点几下拔掉' : p.needsWater ? '口渴了，要浇水' : p.bug ? '有虫子！' : `正在长大… 还要 ${F.fmtRemaining(F.remainingMs(p, seed, now, scale()))}`;
+    const status = F.isRipe(p) ? t('ripeNow') : p.weeds > 0 ? t('weedy') : p.needsWater ? t('thirsty') : p.bug ? t('hasBug') : t('growing', { time: F.fmtRemaining(F.remainingMs(p, seed, now, scale())) });
     const btns = [];
-    if (F.isRipe(p)) btns.push(button('✨ 收获', () => harvest(i), 'primary'));
-    if (p.needsWater) btns.push(button('💧 浇水', () => water(i), 'primary'));
-    if (p.weeds > 0) btns.push(button(`🌿 拔草 (${p.weeds})`, () => pullWeed(i)));
-    if (p.bug) btns.push(button(`🧴 杀虫 (${inv().items.pesticide || 0})`, () => spray(i), inv().items.pesticide ? '' : 'disabled'));
-    if (!F.isRipe(p) && !p.needsWater && p.weeds === 0) btns.push(button(`💩 施肥 (${inv().items.fertilizer || 0})`, () => fertilize(i), inv().items.fertilizer ? '' : 'disabled'));
-    btns.push(button('🗑️', () => dialog({ emoji: '🗑️', title: `把${seed.name}铲掉？`, body: h('div', { class: 'hint' }, '种子不会退回。'), buttons: [{ label: '铲掉', cls: 'danger', onClick: () => { audio.sfx('dig'); updateKid((k) => { k.farm.plots[i] = null; }); renderAll(); } }, { label: '不要', cls: 'soft' }] }), 'icon small'));
+    if (F.isRipe(p)) btns.push(button(t('harvest'), () => harvest(i), 'primary'));
+    if (p.needsWater) btns.push(button(t('water'), () => water(i), 'primary'));
+    if (p.weeds > 0) btns.push(button(t('pullWeed', { n: p.weeds }), () => pullWeed(i)));
+    if (p.bug) btns.push(button(t('spray', { n: inv().items.pesticide || 0 }), () => spray(i), inv().items.pesticide ? '' : 'disabled'));
+    if (!F.isRipe(p) && !p.needsWater && p.weeds === 0) btns.push(button(t('fertilize', { n: inv().items.fertilizer || 0 }), () => fertilize(i), inv().items.fertilizer ? '' : 'disabled'));
+    btns.push(button('🗑️', () => dialog({ emoji: '🗑️', title: t('removePlant', { seed: nm(seed) }), body: h('div', { class: 'hint' }, t('seedNotReturned')), buttons: [{ label: t('remove'), cls: 'danger', onClick: () => { audio.sfx('dig'); updateKid((k) => { k.farm.plots[i] = null; }); renderAll(); } }, { label: t('no'), cls: 'soft' }] }), 'icon small'));
     panel.append(
-      h('div', { class: 'panel-head' }, h('span', { class: 'em' }, seed.emoji), h('span', {}, h('b', {}, seed.name), h('div', { class: 'hint' }, `${farmData.stageNames[p.stage]} · 产量 ${F.harvestYield(p, seed)} 个`))),
+      h('div', { class: 'panel-head' }, h('span', { class: 'em' }, seed.emoji), h('span', {}, h('b', {}, nm(seed)), h('div', { class: 'hint' }, t('yieldInfo', { stage: stageName(p.stage), n: F.harvestYield(p, seed) })))),
       h('div', { class: 'stage-bar' }, ...Array.from({ length: 4 }, (_, k) => h('span', { class: k < p.stage ? 'done' : k === p.stage ? 'cur' : '' }, k === p.stage && !F.isRipe(p) ? h('i', { style: { width: Math.round(prog * 100) + '%' } }) : null))),
       h('div', { class: 'panel-status' }, status),
       h('div', { class: 'row left' }, ...btns),
@@ -112,7 +125,7 @@ export async function homeScene() {
     if (p.weeds > 0) return pullWeed(i);
     if (p.needsWater) return water(i);
     if (p.bug && inv().items.pesticide) return spray(i);
-    if (p.bug) { audio.sfx('bug'); toast('有虫子！需要杀虫剂，去商店买一瓶吧'); }
+    if (p.bug) { audio.sfx('bug'); toast(t('bugNeedSpray')); }
     else audio.sfx('tap');
     renderAll();
   }
@@ -122,12 +135,12 @@ export async function homeScene() {
     const list = h('div', { class: 'seed-pick' });
     for (const [id, n] of seeds) {
       const s = seedById(id); if (!s) continue;
-      list.append(button([h('span', { class: 'em' }, s.emoji), h('span', {}, s.name), h('span', { class: 'cnt' }, `×${n}`)], () => { hideOverlay(); plant(i, id); }, 'seed-btn'));
+      list.append(button([h('span', { class: 'em' }, s.emoji), h('span', {}, nm(s)), h('span', { class: 'cnt' }, `×${n}`)], () => { hideOverlay(); plant(i, id); }, 'seed-btn'));
     }
     showOverlay(h('div', { class: 'dialog' },
-      h('div', { class: 'dialog-title' }, seeds.length ? '种什么？' : '还没有种子'),
-      seeds.length ? list : h('div', { class: 'hint' }, '去商店买一些种子吧。做数学题可以赚金币。'),
-      h('div', { class: 'row' }, button('🏪 去商店', () => { hideOverlay(); stop(); go('shop'); }, seeds.length ? 'soft' : 'primary'), button('取消', () => hideOverlay(), 'soft')),
+      h('div', { class: 'dialog-title' }, seeds.length ? t('whatToPlant') : t('noSeeds')),
+      seeds.length ? list : h('div', { class: 'hint' }, t('goBuySeeds')),
+      h('div', { class: 'row' }, button(t('goShop'), () => { hideOverlay(); stop(); go('shop'); }, seeds.length ? 'soft' : 'primary'), button(t('cancel'), () => hideOverlay(), 'soft')),
     ));
   }
 
@@ -138,7 +151,7 @@ export async function homeScene() {
     const el = plotEls[i]; renderAll();
     const drop = h('span', { class: 'seed-drop' }, '🌰'); el.append(drop);
     await sleep(500); drop.remove(); audio.sfx('plant'); pop(el);
-    toast(`种下了${seed.name}，记得浇水 💧`);
+    toast(t('planted', { seed: nm(seed) }));
   }
 
   async function water(i) {
@@ -193,8 +206,8 @@ export async function homeScene() {
     await flyCoins(el, bagBtn, n, seed.emoji);
     pop(bagBtn);
     selected = null; renderAll();
-    toast(`收获了 ${n} 个${seed.name}，放进仓库了 🎒`);
-    for (const s of unlockedNow) { await sleep(600); audio.sfx('fanfare'); dialog({ emoji: s.emoji, title: `解锁了新种子：${s.name}！`, body: h('div', { class: 'hint' }, '去商店看看吧。'), buttons: [{ label: '太好了', cls: 'primary' }] }); }
+    toast(t('harvested', { n, seed: nm(seed) }));
+    for (const s of unlockedNow) { await sleep(600); audio.sfx('fanfare'); dialog({ emoji: s.emoji, title: t('unlockedSeed', { seed: nm(s) }), body: h('div', { class: 'hint' }, t('checkShop')), buttons: [{ label: t('great'), cls: 'primary' }] }); }
   }
 
   // ---------- 时间推进 ----------

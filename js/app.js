@@ -8,6 +8,7 @@ import { homeScene } from './scenes/home.js';
 import { mathScene } from './scenes/math.js';
 import { bagScene } from './scenes/bag.js';
 import { parentScene } from './scenes/parent.js';
+import { lang } from './core/i18n.js';
 import { shopScene } from './scenes/shop.js';
 
 register('setup', setupScene);
@@ -25,6 +26,7 @@ const unlockOnce = () => { if (unlocked) return; unlocked = true; audio.unlock()
 
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
+document.documentElement.lang = lang() === 'en' ? 'en' : 'zh-CN';
 const st = getState();
 if (!st.account) go('setup');
 else if (!st.kids.length || !st.currentKidId) go('kids');

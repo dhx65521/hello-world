@@ -1,5 +1,7 @@
 // 顶栏常用小部件：金币计数、静音开关、孩子头像标签
-import { h, svg, button } from './ui.js';
+import { h, svg, button, showOverlay, hideOverlay, toast } from './ui.js';
+import { t } from './i18n.js';
+import { getState } from './store.js';
 import * as audio from './audio.js';
 import { currentKid } from './store.js';
 import { avatarSvg } from './avatars.js';
@@ -16,7 +18,7 @@ export const refreshCoins = () => document.getElementById('coin-chip')?.refresh?
 
 export function muteButton() {
   const b = button(audio.isMuted() ? '🔇' : '🔊', () => { const m = audio.toggleMute(); b.textContent = m ? '🔇' : '🔊'; }, 'icon round small');
-  b.setAttribute('aria-label', '声音开关');
+  b.setAttribute('aria-label', 'sound');
   return b;
 }
 
@@ -29,7 +31,7 @@ export function kidChip(onClick) {
 }
 
 /** 四位 PIN 键盘：onDone(pin) */
-export function pinPad({ title = '请输入 4 位密码', onDone, onCancel = null }) {
+export function pinPad({ title = t('enterPin'), onDone, onCancel = null }) {
   let pin = '';
   const dots = h('div', { class: 'pin-dots' });
   const render = () => { dots.innerHTML = ''; for (let i = 0; i < 4; i++) dots.append(h('span', { class: i < pin.length ? 'on' : '' })); };
@@ -45,7 +47,18 @@ export function pinPad({ title = '请输入 4 位密码', onDone, onCancel = nul
     }, 'key' + (k === '✓' ? ' primary' : '')));
   }
   const wrap = h('div', { class: 'pinpad' }, h('div', { class: 'pin-title' }, title), dots, keys);
-  if (onCancel) wrap.append(button('取消', onCancel, 'soft'));
+  if (onCancel) wrap.append(button(t('cancel'), onCancel, 'soft'));
   wrap.reset = () => { pin = ''; render(); };
   return wrap;
+}
+
+/** 弹出密码框，正确后执行 onOk（没有设置密码则直接执行） */
+export function requirePin(onOk, title = t('enterParentPin')) {
+  const st = getState();
+  if (!st.account?.pin) return onOk();
+  const pad = pinPad({ title, onDone: (p) => {
+    if (p === st.account.pin) { hideOverlay(); audio.sfx('open'); onOk(); }
+    else { audio.sfx('wrong'); toast(t('wrongPin')); pad.reset(); }
+  }, onCancel: hideOverlay });
+  showOverlay(h('div', { class: 'dialog' }, pad));
 }
