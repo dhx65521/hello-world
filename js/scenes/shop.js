@@ -12,12 +12,12 @@ import { t, name as nm, desc, pickLine } from '../core/i18n.js';
 
 
 
-export async function shopScene({ tab = 'seeds' } = {}) {
+export async function shopScene({ tab = 'seeds', from = 'home' } = {}) {
   const kid = currentKid();
   if (!kid) return go('kids');
   const data = await loadFarmData(); await loadFactoryData(); const decor = await loadDecorData();
   audio.music('shop');
-  const ui = scene({ title: '🏪 ' + t('shopName'), theme: 'shop', left: button('🏠', () => go('home'), 'icon'), right: [coinChip(), muteButton()], scroll: true });
+  const ui = scene({ title: '🏪 ' + t('shopName'), theme: 'shop', left: button(from === 'room' ? '🛏️' : '🏠', () => go(from), 'icon'), right: [coinChip(), muteButton()], scroll: true });
 
   const bubble = h('div', { class: 'bubble' }, pickLine('shopWelcome'));
   const keeper = h('div', { class: 'keeper' }, h('span', { class: 'face' }, '🧑‍🌾'), bubble);

@@ -1,5 +1,5 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = 'd8255624c5';
+self.__VERSION = 'f669108a5c';
 self.__ASSETS = [
   "./",
   "./css/style.css",
@@ -37,6 +37,7 @@ self.__ASSETS = [
   "./js/scenes/kids.js",
   "./js/scenes/math.js",
   "./js/scenes/parent.js",
+  "./js/scenes/roomscene.js",
   "./js/scenes/setup.js",
   "./js/scenes/shop.js",
   "./js/version.js",
