@@ -1,0 +1,10 @@
+{
+  "_说明": "数学闯关规则。max 是题目和答案允许的最大数字（不含），ops 是运算类型。",
+  "max": 24,
+  "ops": ["+", "-"],
+  "minSum": 2,
+  "bigRatio": 0.6,
+  "idleMs": 900,
+  "minConfidence": 0.55,
+  "wrongShowAnswerMs": 1800
+}
