@@ -388,3 +388,21 @@ button, input { font-family: inherit; color: inherit; }
 }
 @media (max-height: 520px) { .num-card { width: min(26%, 36vh); } .copy-pad .digit-box { width: min(36vh, 34vw); } .copy-row .num-card { width: min(36vh, 30vw); } }
 @media (max-width: 520px) { .num-card { width: 28%; } .copy-pad .digit-box { width: 40vw; } .copy-row .num-card { width: 34vw; } }
+/* iPad 横屏：农场板按可用高度放大，整体垂直居中 */
+.farm-layout { align-items: center; }
+.farm-board { max-width: min(940px, calc((100vh - 200px) * 1.5)); }
+.farm-board .farm-sky { height: clamp(60px, 9vh, 110px); }
+.farm-grid { gap: clamp(8px, 1.2vw, 16px); padding: clamp(10px, 1.4vw, 20px) clamp(10px, 1.4vw, 20px) 8px; }
+.plot { aspect-ratio: 1.05; }
+.plot .badge { width: clamp(30px, 3.2vw, 44px); height: clamp(30px, 3.2vw, 44px); font-size: clamp(16px, 1.8vw, 24px); }
+.plot .bug { font-size: clamp(20px, 2.4vw, 32px); } .plot .weed { font-size: clamp(18px, 2.2vw, 30px); }
+.home-side { position: static; }
+@media (max-width: 760px), (max-height: 520px) { .plot { aspect-ratio: 1.15; } .farm-layout { align-items: flex-start; } }
+.farm-layout.home-layout { max-width: 1400px; }
+@media (max-height: 520px) { .farm-board { max-width: 46vw; } }
+@media (max-width: 520px) { .farm-board { max-width: none; } }
+@media (orientation: portrait) and (max-width: 900px) {
+  .farm-board { flex: 0 0 auto; }
+  .home-btn { font-size: 22px; min-width: 0; padding: 8px 12px; }
+  .home-btn .lbl { align-items: center; }
+}
