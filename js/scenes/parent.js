@@ -8,6 +8,7 @@ import * as audio from '../core/audio.js';
 import { APP_VERSION } from '../version.js';
 import { t, lang, setLang } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
+import * as speech from '../core/speech.js';
 
 let unlockedUntil = 0;
 
@@ -52,9 +53,30 @@ export function parentScene() {
   wrap.append(kidsSec);
 
   wrap.append(seg(t('dailyLimit'), [[1, t('times', { n: 1 })], [2, t('times', { n: 2 })], [3, t('times', { n: 3 })], [5, t('times', { n: 5 })], [0, t('unlimited')]], () => limits.dailyLimit(), (v) => setSetting('dailyLimit', v), t('dailyHint')));
+  wrap.append(seg(t('mathMode'), [['auto', t('modeAuto')], ['little', t('modeLittle')], ['big', t('modeBig')]], () => setting('mathMode') || 'auto', (v) => setSetting('mathMode', v)));
   wrap.append(seg(t('roundLength'), [[180, t('minutes', { n: 3 })], [300, t('minutes', { n: 5 })], [480, t('minutes', { n: 8 })], [600, t('minutes', { n: 10 })]], () => setting('roundSeconds'), (v) => setSetting('roundSeconds', v)));
   wrap.append(seg(t('reward'), [[1, '+1'], [2, '+2'], [3, '+3']], () => setting('rewardCoins'), (v) => setSetting('rewardCoins', v), t('rewardHint')));
   wrap.append(seg(t('farmTime'), [[1, t('normal')], [10, t('faster', { n: 10 })], [60, t('faster', { n: 60 })], [600, t('faster', { n: 600 })]], () => setting('timeScale'), (v) => setSetting('timeScale', v), t('farmTimeHint')));
+
+  // 语音
+  const voiceSec = h('section', {}, h('h2', {}, t('voice')));
+  const voiceRow = h('div', { class: 'seg' });
+  const renderVoices = () => {
+    voiceRow.innerHTML = '';
+    const list = speech.voicesFor(lang()); const cur = speech.currentVoice(lang());
+    if (!list.length) { voiceRow.append(h('div', { class: 'hint' }, t('noVoices'))); return; }
+    for (const v of list.slice(0, 8)) {
+      const label = v.name + ((v.voiceURI + v.name).toLowerCase().includes('premium') ? ' ★★' : (v.voiceURI + v.name).toLowerCase().includes('enhanced') ? ' ★' : '');
+      voiceRow.append(button(label, () => { speech.setVoice(lang(), v.voiceURI); renderVoices(); speech.say(lang() === 'en' ? 'Hello! Which one is the number 7?' : '你好！下面哪个是数字 7？'); }, cur && cur.voiceURI === v.voiceURI ? 'on' : ''));
+    }
+  };
+  renderVoices();
+  if (window.speechSynthesis) speechSynthesis.addEventListener?.('voiceschanged', renderVoices);
+  const rateRow = h('div', { class: 'seg' });
+  const renderRate = () => { rateRow.innerHTML = ''; for (const [r, label] of [[0.75, t('slow')], [0.9, t('normalRate')], [1.0, t('fast')]]) rateRow.append(button(label, () => { setSetting('speechRate', r); renderRate(); speech.say(lang() === 'en' ? 'Write the number 5.' : '照着写数字 5。'); }, Math.abs((Number(setting('speechRate')) || 0.9) - r) < 0.01 ? 'on' : '')); };
+  renderRate();
+  voiceSec.append(voiceRow, h('div', { class: 'hint', style: { margin: '8px 0' } }, t('speechRate')), rateRow, h('div', { class: 'hint' }, t('voiceHint')));
+  wrap.append(voiceSec);
 
   // 存档
   const fileInput = h('input', { type: 'file', accept: '.json,application/json', style: { display: 'none' } });
