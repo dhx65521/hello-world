@@ -10,6 +10,7 @@ import { bagScene } from './scenes/bag.js';
 import { parentScene } from './scenes/parent.js';
 import { lang } from './core/i18n.js';
 import { shopScene } from './scenes/shop.js';
+import { factoryScene } from './scenes/factory.js';
 
 register('setup', setupScene);
 register('kids', kidsScene);
@@ -18,6 +19,7 @@ register('home', homeScene);
 register('math', mathScene);
 register('bag', bagScene);
 register('shop', shopScene);
+register('factory', factoryScene);
 register('parent', parentScene);
 
 let unlocked = false;

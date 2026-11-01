@@ -1,29 +1,36 @@
-// 主界面 = 农场：2×4 地块 + 数学 / 商店 / 仓库入口 + 地块操作面板
+// 主界面 = 农场 + 儿童房：2×4 地块、2.5D 房间、入口按钮、操作面板
 import { h, svg, scene, button, longPress, dialog, showOverlay, hideOverlay, toast, sleep, loadJSON } from '../core/ui.js';
 import { currentKid, updateKid, setting } from '../core/store.js';
 import { go } from '../core/router.js';
 import * as audio from '../core/audio.js';
-import { coinChip, muteButton, kidChip } from '../core/widgets.js';
+import { coinChip, muteButton, kidChip, requirePin } from '../core/widgets.js';
 import { burst, flyCoins, pop, shake } from '../core/fx.js';
 import { plantSvg } from '../core/plants.js';
 import * as F from '../core/farmlogic.js';
+import * as R from '../core/room.js';
 import { t, name as nm } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
-import { requirePin } from '../core/widgets.js';
+import { loadFactoryData, readyCount } from './factory.js';
 
-let farmData = null;
+let farmData = null, decorData = null;
 export async function loadFarmData() {
   if (!farmData) farmData = await loadJSON(new URL('../../data/farm.json', import.meta.url));
   return farmData;
 }
+export async function loadDecorData() {
+  if (!decorData) { decorData = await loadJSON(new URL('../../data/decor.json', import.meta.url)); R.setDecor(decorData); }
+  return decorData;
+}
 export const seedById = (id) => farmData?.seeds.find((s) => s.id === id);
 export const itemById = (id) => farmData?.items.find((s) => s.id === id);
+export const decorById = (id) => decorData?.items.find((s) => s.id === id);
 export const stageName = (i) => (document.documentElement.lang === 'en' ? farmData.stageNamesEn : farmData.stageNames)[i];
 
 export async function homeScene() {
   const kid0 = currentKid();
   if (!kid0) return go('kids');
-  await loadFarmData();
+  await Promise.all([loadFarmData(), loadDecorData(), loadFactoryData()]);
+  if (!kid0.room) updateKid((k) => { k.room = R.initRoom(); });
   audio.music('farm');
   const cfg = farmData.events;
   const scale = () => Number(setting('timeScale')) || 1;
@@ -46,13 +53,22 @@ export async function homeScene() {
     h('div', { class: 'fence' }),
   );
 
+  // ---------- 房间 ----------
+  const roomEl = h('div', { class: 'room-board' });
+  roomEl.addEventListener('click', onRoomTap);
+  const roomTitle = h('div', { class: 'room-title' }, `🛏️ ${t('room')}`);
+  const roomWrap = h('div', { class: 'room-wrap' }, roomTitle, roomEl);
+
   // ---------- 右侧 ----------
   const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, t('bag'))], () => { stop(); go('bag'); }, 'home-btn');
   const left = limits.remaining('math');
   const mathSub = left === Infinity ? null : h('small', { class: 'sub' }, left > 0 ? t('leftToday', { n: left }) : t('noneLeftToday'));
+  const ready = readyCount(currentKid());
+  const factoryBtn = button([h('span', { class: 'emoji' }, '🏭'), h('span', {}, t('factory')), ready ? h('span', { class: 'dot' }, String(ready)) : null], () => { stop(); go('factory'); }, 'home-btn');
   const menu = h('div', { class: 'home-menu' },
     button([h('span', { class: 'emoji' }, '🧮'), h('span', { class: 'lbl' }, h('span', {}, t('doMath')), mathSub)], () => startMath(), 'home-btn primary' + (left === 0 ? ' dim' : '')),
-    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shop'))], () => { stop(); go('shop'); }, 'home-btn'),
+    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shopName'))], () => { stop(); go('shop'); }, 'home-btn'),
+    factoryBtn,
     bagBtn,
   );
   function startMath() {
@@ -63,12 +79,16 @@ export async function homeScene() {
       { label: t('tomorrow'), cls: 'primary' }] });
   }
   const panel = h('div', { class: 'plot-panel' });
-  ui.body.append(h('div', { class: 'home-layout farm-layout' }, board, h('div', { class: 'home-side' }, menu, panel)));
+  ui.body.classList.add('scrollable');
+  ui.body.append(h('div', { class: 'home-layout farm-layout' }, h('div', { class: 'home-left' }, board, roomWrap), h('div', { class: 'home-side' }, menu, panel)));
 
   // ---------- 状态 ----------
-  let selected = null;
+  let selected = null;          // 选中的地块序号
+  let selFurn = null;           // 选中的家具 uid
+  let moving = false;           // 等待点地砖挪动
   const plots = () => currentKid().farm.plots;
   const inv = () => currentKid().inventory;
+  const room = () => currentKid().room;
 
   function renderPlot(i) {
     const el = plotEls[i]; const p = plots()[i];
@@ -86,13 +106,16 @@ export async function homeScene() {
     else if (p.weeds > 0) el.append(h('span', { class: 'badge' }, '🌿'));
     else el.append(h('span', { class: 'badge ring', style: { '--p': Math.round(F.stageProgress(p, seed, Date.now(), scale()) * 100) } }, '⏳'));
   }
-  const renderAll = () => { for (let i = 0; i < 8; i++) renderPlot(i); renderPanel(); };
+  const renderRoom = () => { roomEl.innerHTML = R.renderRoom(room(), { selected: selFurn, moving }); };
+  const renderAll = () => { for (let i = 0; i < 8; i++) renderPlot(i); renderRoom(); renderPanel(); };
 
   function renderPanel() {
     panel.innerHTML = '';
+    if (selFurn) return renderFurnPanel();
     if (selected == null) {
       const need = plots().filter((p) => p && (p.needsWater || p.weeds > 0 || p.bug || F.isRipe(p))).length;
       panel.append(h('div', { class: 'panel-hint' }, need ? t('needCare', { n: need }) : t('tapToPlant')));
+      panel.append(h('div', { class: 'row left' }, button(t('place'), () => openPlacePicker(), 'soft')));
       return;
     }
     const i = selected, p = plots()[i];
@@ -116,10 +139,10 @@ export async function homeScene() {
     );
   }
 
-  // ---------- 操作 ----------
+  // ---------- 农场操作 ----------
   function onPlotTap(i) {
     const p = plots()[i];
-    selected = i;
+    selected = i; selFurn = null; moving = false;
     if (!p) { renderAll(); audio.sfx('tap'); return openSeedPicker(i); }
     if (F.isRipe(p)) return harvest(i);
     if (p.weeds > 0) return pullWeed(i);
@@ -129,7 +152,6 @@ export async function homeScene() {
     else audio.sfx('tap');
     renderAll();
   }
-
   function openSeedPicker(i) {
     const seeds = Object.entries(inv().seeds).filter(([, n]) => n > 0);
     const list = h('div', { class: 'seed-pick' });
@@ -143,7 +165,6 @@ export async function homeScene() {
       h('div', { class: 'row' }, button(t('goShop'), () => { hideOverlay(); stop(); go('shop'); }, seeds.length ? 'soft' : 'primary'), button(t('cancel'), () => hideOverlay(), 'soft')),
     ));
   }
-
   async function plant(i, seedId) {
     const seed = seedById(seedId);
     updateKid((k) => { k.inventory.seeds[seedId] -= 1; k.farm.plots[i] = F.newPlot(seedId, Date.now()); });
@@ -153,7 +174,6 @@ export async function homeScene() {
     await sleep(500); drop.remove(); audio.sfx('plant'); pop(el);
     toast(t('planted', { seed: nm(seed) }));
   }
-
   async function water(i) {
     const el = plotEls[i];
     updateKid((k) => { k.farm.plots[i] = F.water(k.farm.plots[i], Date.now()); });
@@ -163,7 +183,6 @@ export async function homeScene() {
     await sleep(900); can.remove(); drops.remove();
     renderAll();
   }
-
   function pullWeed(i) {
     const el = plotEls[i];
     updateKid((k) => { k.farm.plots[i] = F.pullWeed(k.farm.plots[i], Date.now()); });
@@ -171,7 +190,6 @@ export async function homeScene() {
     const w = el.querySelector('.weed'); if (w) { w.classList.add('pulled'); setTimeout(() => renderAll(), 350); } else renderAll();
     if (plots()[i].weeds === 0) { audio.sfx('sparkle'); burst(el, ['🌿', '✨'], 6); }
   }
-
   function spray(i) {
     if (!inv().items.pesticide) return;
     const el = plotEls[i];
@@ -181,7 +199,6 @@ export async function homeScene() {
     const mist = h('span', { class: 'mist' }, '🧴'); el.append(mist);
     setTimeout(() => { mist.remove(); renderAll(); burst(el, ['✨'], 5); }, 700);
   }
-
   function fertilize(i) {
     if (!inv().items.fertilizer) return;
     const el = plotEls[i]; const seed = seedById(plots()[i].seed);
@@ -189,7 +206,6 @@ export async function homeScene() {
     audio.sfx('sparkle'); burst(el, ['✨', '💛', '🌟'], 12);
     setTimeout(() => { tickAll(true); pop(el); }, 400);
   }
-
   async function harvest(i) {
     const p = plots()[i]; const seed = seedById(p.seed);
     const n = F.harvestYield(p, seed);
@@ -210,6 +226,117 @@ export async function homeScene() {
     for (const s of unlockedNow) { await sleep(600); audio.sfx('fanfare'); dialog({ emoji: s.emoji, title: t('unlockedSeed', { seed: nm(s) }), body: h('div', { class: 'hint' }, t('checkShop')), buttons: [{ label: t('great'), cls: 'primary' }] }); }
   }
 
+  // ---------- 房间操作 ----------
+  function onRoomTap(e) {
+    const itemEl = e.target.closest('.room-item');
+    const tileEl = e.target.closest('.tile');
+    if (itemEl) {
+      const uid = itemEl.dataset.uid;
+      if (moving && selFurn && uid !== selFurn) { /* 点到别的家具：当作点地砖忽略 */ }
+      selFurn = uid; selected = null; moving = false; audio.sfx('tap'); renderAll(); return;
+    }
+    if (tileEl) {
+      const [x, y] = tileEl.dataset.tile.split(',').map(Number);
+      if (moving && selFurn) return moveTo(x, y);
+      // 点空地砖：取消选中
+      if (selFurn) { selFurn = null; moving = false; audio.sfx('tap'); renderAll(); }
+      return;
+    }
+  }
+  function placedOf(uid) { return room().placed.find((p) => p.uid === uid); }
+  function wallOf(uid) { return room().wall.find((p) => p.uid === uid); }
+  function renderFurnPanel() {
+    const p = placedOf(selFurn), wv = wallOf(selFurn);
+    const def = R.itemDef((p || wv)?.item);
+    if (!def) { selFurn = null; return renderPanel(); }
+    const btns = [];
+    if (p) {
+      if (def.type === 'floor') btns.push(button(t('rotate'), () => rotateSel(), ''));
+      btns.push(button(t('move'), () => { moving = !moving; renderRoom(); renderPanel(); }, moving ? 'on' : ''));
+      if (def.id === 'bed') btns.push(button(t('changeSheet'), () => openSheetPicker(), 'soft'));
+      if (!def.starter) btns.push(button(t('putAway'), () => putAway(), 'soft'));
+    } else if (wv) {
+      btns.push(button(wv.side === 'left' ? t('rightWall') : t('leftWall'), () => switchWall(), ''));
+      btns.push(button(t('putAway'), () => putAway(), 'soft'));
+    }
+    panel.append(
+      h('div', { class: 'panel-head' }, h('span', { class: 'em' }, def.emoji), h('span', {}, h('b', {}, nm(def)), h('div', { class: 'hint' }, moving ? t('move') : t('roomHint')))),
+      h('div', { class: 'row left' }, ...btns, button('✕', () => { selFurn = null; moving = false; renderAll(); }, 'icon small')),
+    );
+  }
+  function rotateSel() {
+    const p = placedOf(selFurn); if (!p) return; const def = R.itemDef(p.item);
+    let rot = (p.rot + 1) % 4;
+    // 转不下就试着往回挪一点
+    for (let tries = 0; tries < 4; tries++) {
+      if (R.canPlace(room(), def, p.x, p.y, rot, p.uid)) { updateKid((k) => { const q = k.room.placed.find((z) => z.uid === p.uid); q.rot = rot; }); audio.sfx('whoosh'); renderAll(); return; }
+      const { w, d } = R.dims(def, rot);
+      const nx = Math.min(p.x, R.COLS() - w), ny = Math.min(p.y, R.ROWS() - d);
+      if (R.canPlace(room(), def, nx, ny, rot, p.uid)) { updateKid((k) => { const q = k.room.placed.find((z) => z.uid === p.uid); q.rot = rot; q.x = nx; q.y = ny; }); audio.sfx('whoosh'); renderAll(); return; }
+      rot = (rot + 1) % 4;
+    }
+    audio.sfx('wrong'); toast(t('noSpace'));
+  }
+  function moveTo(x, y) {
+    const p = placedOf(selFurn); if (!p) return; const def = R.itemDef(p.item);
+    const { w, d } = R.dims(def, p.rot);
+    const nx = Math.min(x, R.COLS() - w), ny = Math.min(y, R.ROWS() - d);
+    if (!R.canPlace(room(), def, nx, ny, p.rot, p.uid)) { audio.sfx('wrong'); shake(roomEl); toast(t('noSpace')); return; }
+    updateKid((k) => { const q = k.room.placed.find((z) => z.uid === p.uid); q.x = nx; q.y = ny; });
+    moving = false; audio.sfx('pop'); renderAll(); burst(roomEl, ['✨'], 5);
+  }
+  function switchWall() {
+    const wv = wallOf(selFurn); if (!wv) return;
+    const side = wv.side === 'left' ? 'right' : 'left';
+    const slot = R.freeWallSlot(room(), side);
+    if (slot < 0) { audio.sfx('wrong'); toast(t('wallFull')); return; }
+    updateKid((k) => { const q = k.room.wall.find((z) => z.uid === wv.uid); q.side = side; q.slot = slot; });
+    audio.sfx('whoosh'); renderAll();
+  }
+  function putAway() {
+    const p = placedOf(selFurn), wv = wallOf(selFurn); const item = (p || wv).item;
+    updateKid((k) => { k.room.placed = k.room.placed.filter((z) => z.uid !== selFurn); k.room.wall = k.room.wall.filter((z) => z.uid !== selFurn); k.inventory.decor[item] = (k.inventory.decor[item] || 0) + 1; });
+    selFurn = null; moving = false; audio.sfx('whoosh'); renderAll(); toast(t('putAwayToast'));
+  }
+  function openPlacePicker() {
+    const owned = Object.entries(inv().decor || {}).filter(([id, n]) => n > 0 && R.itemDef(id) && R.itemDef(id).type !== 'sheet');
+    const list = h('div', { class: 'seed-pick' });
+    for (const [id, n] of owned) {
+      const def = R.itemDef(id);
+      list.append(button([h('span', { class: 'em' }, def.emoji), h('span', {}, nm(def)), h('span', { class: 'cnt' }, `×${n}`)], () => { hideOverlay(); placeNew(def); }, 'seed-btn'));
+    }
+    showOverlay(h('div', { class: 'dialog' },
+      h('div', { class: 'dialog-title' }, owned.length ? t('place') : t('nothingToPlace')),
+      owned.length ? list : h('div', { class: 'hint' }, t('checkShop')),
+      h('div', { class: 'row' }, button(t('goShop'), () => { hideOverlay(); stop(); go('shop', { tab: 'decor' }); }, owned.length ? 'soft' : 'primary'), button(t('cancel'), () => hideOverlay(), 'soft')),
+    ));
+  }
+  function placeNew(def) {
+    if (def.type === 'wall') {
+      const pick = (side) => {
+        const slot = R.freeWallSlot(room(), side);
+        if (slot < 0) { audio.sfx('wrong'); toast(t('wallFull')); return; }
+        let placed; updateKid((k) => { k.inventory.decor[def.id] -= 1; placed = R.hangItem(k.room, def.id, side, slot); });
+        selFurn = placed.uid; audio.sfx('pop'); renderAll(); burst(roomEl, ['✨'], 6); toast(t('placedToast'));
+      };
+      dialog({ emoji: def.emoji, title: t('hangWhere'), buttons: [{ label: t('leftWall'), cls: 'primary', onClick: () => pick('left') }, { label: t('rightWall'), cls: 'primary', onClick: () => pick('right') }, { label: t('cancel'), cls: 'soft' }] });
+      return;
+    }
+    const pos = R.findFree(room(), def);
+    if (!pos) { audio.sfx('wrong'); toast(t('noSpace')); return; }
+    let placed; updateKid((k) => { k.inventory.decor[def.id] -= 1; placed = R.placeItem(k.room, def.id, pos); });
+    selFurn = placed.uid; moving = false; audio.sfx('pop'); renderAll(); burst(roomEl, ['✨', '🎉'], 8); toast(t('placedToast'));
+  }
+  function openSheetPicker() {
+    const sheets = decorData.items.filter((d) => d.type === 'sheet' && (inv().decor[d.id] || 0) > 0 || (d.type === 'sheet' && room().sheet === d.pattern));
+    const list = h('div', { class: 'seed-pick' },
+      button([h('span', { class: 'em' }, '⬜'), h('span', {}, t('plainSheet'))], () => { hideOverlay(); setSheet('plain'); }, 'seed-btn' + (room().sheet === 'plain' ? ' on' : '')),
+      ...sheets.map((d) => button([h('span', { class: 'em' }, d.emoji), h('span', {}, nm(d))], () => { hideOverlay(); setSheet(d.pattern); }, 'seed-btn' + (room().sheet === d.pattern ? ' on' : ''))));
+    showOverlay(h('div', { class: 'dialog' }, h('div', { class: 'dialog-title' }, t('pickSheet')), list,
+      h('div', { class: 'row' }, button(t('goShop'), () => { hideOverlay(); stop(); go('shop', { tab: 'decor' }); }, 'soft'), button(t('cancel'), () => hideOverlay(), 'soft'))));
+  }
+  function setSheet(pattern) { updateKid((k) => { k.room.sheet = pattern; }); audio.sfx('sparkle'); renderAll(); burst(roomEl, ['✨'], 6); }
+
   // ---------- 时间推进 ----------
   function tickAll(force = false) {
     const now = Date.now(); let changed = false; const evs = [];
@@ -222,13 +349,14 @@ export async function homeScene() {
         return r.plot;
       });
     });
+    const rc = readyCount(currentKid());
+    const dot = factoryBtn.querySelector('.dot');
+    if (rc && !dot) factoryBtn.append(h('span', { class: 'dot' }, String(rc))); else if (dot && !rc) dot.remove(); else if (dot) dot.textContent = String(rc);
     if (changed) {
-      if (evs.includes('ripe')) { audio.sfx('sparkle'); }
-      else if (evs.includes('grew')) audio.sfx('pop');
+      if (evs.includes('ripe')) audio.sfx('sparkle'); else if (evs.includes('grew')) audio.sfx('pop');
       if (evs.includes('bug')) audio.sfx('bug');
       renderAll();
     } else if (!force) {
-      // 只刷新进度环与面板文字
       plots().forEach((p, i) => { if (p && !F.isBlocked(p) && !F.isRipe(p)) { const b = plotEls[i].querySelector('.badge.ring'); if (b) b.style.setProperty('--p', Math.round(F.stageProgress(p, seedById(p.seed), now, scale()) * 100)); } });
       if (selected != null) renderPanel();
     }

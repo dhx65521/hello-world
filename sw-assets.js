@@ -1,8 +1,10 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = 'd8a29ee1bd';
+self.__VERSION = '6e4f718b19';
 self.__ASSETS = [
   "./",
   "./css/style.css",
+  "./data/decor.json",
+  "./data/factory.json",
   "./data/farm.json",
   "./data/math.json",
   "./icons/apple-touch-icon-180.png",
@@ -17,8 +19,10 @@ self.__ASSETS = [
   "./js/core/farmlogic.js",
   "./js/core/fx.js",
   "./js/core/i18n.js",
+  "./js/core/iso.js",
   "./js/core/limits.js",
   "./js/core/plants.js",
+  "./js/core/room.js",
   "./js/core/router.js",
   "./js/core/speech.js",
   "./js/core/store.js",
@@ -27,6 +31,7 @@ self.__ASSETS = [
   "./js/ml/digits-model.json",
   "./js/ml/digits.js",
   "./js/scenes/bag.js",
+  "./js/scenes/factory.js",
   "./js/scenes/home.js",
   "./js/scenes/kids.js",
   "./js/scenes/math.js",

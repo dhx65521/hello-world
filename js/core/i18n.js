@@ -60,6 +60,13 @@ const DICT = {
     mathMode: '🧮 数学模式', modeAuto: '按年龄（5 岁以下听选 / 描写）', modeLittle: '听选 + 描写', modeBig: '手写算式',
     voice: '🗣️ 语音', voiceHint: '用 iPad 自带的朗读声音。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音 › 中文 / 英语，下载带“增强”或“高级”的声音（如婷婷、Ava），下载后回到这里选中它。Siri 的声音不对网页开放。',
     voiceTest: '试听', noVoices: '这个语言没有可用的声音', speechRate: '语速', slow: '慢', normalRate: '适中', fast: '正常',
+    // 加工厂
+    factory: '加工厂', factoryTitle: '🏭 食品加工厂', factoryIntro: '用收获的原料做成好吃的，卖得更贵！', slotIdle: '空闲', slotWorking: '制作中… 还要 {time}', slotDone: '做好啦！', collect: '✨ 收取',
+    make: '🍳 制作', needMore: '原料不够', noSlot: '两个加工位都在忙', inputsLine: '需要', sellsFor: '卖 🪙 {n}', takes: '⏱ {time}', haveN: '有 {n}', producedToast: '{name} 做好了，放进仓库 🎒', startedToast: '开始制作{name}',
+    // 杂货店 / 家具
+    shopName: '杂货店', tabDecor: '🛏️ 家具', tabSellAll: '🧺 卖东西', products: '🍰 成品', noProducts: '还没有成品，去加工厂做一些吧。', decorOwned: '已拥有', decorBought: '已买到，去房间里摆上吧！', sheetBought: '已买到，点床就能换上！',
+    // 房间
+    room: '我的房间', roomHint: '点家具可以旋转、挪动；点地砖把它放过去', place: '🪑 摆家具', rotate: '⟳ 旋转', move: '👉 点地砖挪过去', putAway: '🎒 收起来', changeSheet: '🛏️ 换床单', noSpace: '那里放不下', nothingToPlace: '还没有新家具，去杂货店看看吧', pickSheet: '选一款床单', plainSheet: '白床单', hangWhere: '挂在哪面墙？', leftWall: '左边墙', rightWall: '右边墙', wallFull: '墙上挂满了', placedToast: '摆好了！', putAwayToast: '收进仓库了', furnitureSec: '🛏️ 家具',
     // 时间
     sec: '{n} 秒', min: '{n} 分钟', hour: '{n} 小时', hourMin: '{h} 小时 {m} 分', dayHour: '{d} 天 {h} 小时',
   },
@@ -111,6 +118,10 @@ const DICT = {
     mathMode: '🧮 Math mode', modeAuto: 'By age (under 5: listen & pick / copy)', modeLittle: 'Listen & pick / copy', modeBig: 'Handwritten sums',
     voice: '🗣️ Voice', voiceHint: 'Uses the built-in system voices. For a more natural voice: Settings › Accessibility › Spoken Content › Voices › download an “Enhanced” or “Premium” voice (e.g. Ava, Tingting), then pick it here. Siri voices are not available to web apps.',
     voiceTest: 'Test', noVoices: 'No voice available for this language', speechRate: 'Speed', slow: 'Slow', normalRate: 'Medium', fast: 'Normal',
+    factory: 'Factory', factoryTitle: '🏭 Food Factory', factoryIntro: 'Turn your harvest into tasty food that sells for much more!', slotIdle: 'Idle', slotWorking: 'Making… {time} left', slotDone: 'Ready!', collect: '✨ Collect',
+    make: '🍳 Make', needMore: 'Not enough ingredients', noSlot: 'Both slots are busy', inputsLine: 'Needs', sellsFor: 'Sells 🪙 {n}', takes: '⏱ {time}', haveN: 'have {n}', producedToast: '{name} is ready, put in your backpack 🎒', startedToast: 'Started making {name}',
+    shopName: 'General Store', tabDecor: '🛏️ Furniture', tabSellAll: '🧺 Sell', products: '🍰 Products', noProducts: 'No products yet. Make some at the factory.', decorOwned: 'Owned', decorBought: 'Bought! Place it in your room.', sheetBought: 'Bought! Tap the bed to change sheets.',
+    room: 'My Room', roomHint: 'Tap furniture to rotate or move it; tap a floor tile to move it there', place: '🪑 Place furniture', rotate: '⟳ Rotate', move: '👉 Tap a tile to move', putAway: '🎒 Put away', changeSheet: '🛏️ Change sheets', noSpace: "It doesn't fit there", nothingToPlace: 'No new furniture yet. Visit the store!', pickSheet: 'Pick sheets', plainSheet: 'Plain sheets', hangWhere: 'Which wall?', leftWall: 'Left wall', rightWall: 'Right wall', wallFull: 'The wall is full', placedToast: 'Placed!', putAwayToast: 'Put in your backpack', furnitureSec: '🛏️ Furniture',
     sec: '{n} s', min: '{n} min', hour: '{n} h', hourMin: '{h} h {m} min', dayHour: '{d} d {h} h',
   },
 };

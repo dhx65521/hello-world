@@ -1,0 +1,192 @@
+{
+  "_说明": "加工厂配方。inputs 是需要的原料（种子 id → 数量），minutes 加工时间（真实分钟，受倍速影响），sell 成品售价。slots 是同时加工的数量。",
+  "slots": 2,
+  "recipes": [
+    {
+      "id": "tomato_sauce",
+      "name": "番茄酱",
+      "nameEn": "Tomato Sauce",
+      "emoji": "🥫",
+      "inputs": {
+        "tomato": 3
+      },
+      "minutes": 8,
+      "sell": 14
+    },
+    {
+      "id": "strawberry_jam",
+      "name": "草莓酱",
+      "nameEn": "Strawberry Jam",
+      "emoji": "🫙",
+      "inputs": {
+        "strawberry": 3
+      },
+      "minutes": 10,
+      "sell": 18
+    },
+    {
+      "id": "blueberry_jam",
+      "name": "蓝莓酱",
+      "nameEn": "Blueberry Jam",
+      "emoji": "🫐",
+      "inputs": {
+        "blueberry": 3
+      },
+      "minutes": 12,
+      "sell": 20
+    },
+    {
+      "id": "cherry_jam",
+      "name": "樱桃酱",
+      "nameEn": "Cherry Jam",
+      "emoji": "🍒",
+      "inputs": {
+        "cherry": 4
+      },
+      "minutes": 12,
+      "sell": 30
+    },
+    {
+      "id": "sunflower_oil",
+      "name": "葵花籽油",
+      "nameEn": "Sunflower Oil",
+      "emoji": "🛢️",
+      "inputs": {
+        "sunflower": 3
+      },
+      "minutes": 15,
+      "sell": 24
+    },
+    {
+      "id": "watermelon_juice",
+      "name": "西瓜汁",
+      "nameEn": "Watermelon Juice",
+      "emoji": "🧃",
+      "inputs": {
+        "watermelon": 1
+      },
+      "minutes": 6,
+      "sell": 22
+    },
+    {
+      "id": "pumpkin_spice_strawberry_jam",
+      "name": "南瓜草莓酱",
+      "nameEn": "Pumpkin Spice Strawberry Jam",
+      "emoji": "🎃",
+      "inputs": {
+        "strawberry": 2,
+        "pumpkin": 1
+      },
+      "minutes": 20,
+      "sell": 40
+    },
+    {
+      "id": "bread",
+      "name": "面包",
+      "nameEn": "Bread",
+      "emoji": "🍞",
+      "inputs": {
+        "wheat": 3
+      },
+      "minutes": 15,
+      "sell": 16
+    },
+    {
+      "id": "popcorn",
+      "name": "爆米花",
+      "nameEn": "Popcorn",
+      "emoji": "🍿",
+      "inputs": {
+        "corn": 3
+      },
+      "minutes": 8,
+      "sell": 26
+    },
+    {
+      "id": "corn_bread",
+      "name": "玉米面包",
+      "nameEn": "Corn Bread",
+      "emoji": "🥖",
+      "inputs": {
+        "wheat": 2,
+        "corn": 2
+      },
+      "minutes": 18,
+      "sell": 34
+    },
+    {
+      "id": "strawberry_cake",
+      "name": "草莓蛋糕",
+      "nameEn": "Strawberry Cake",
+      "emoji": "🍰",
+      "inputs": {
+        "wheat": 2,
+        "strawberry": 2
+      },
+      "minutes": 25,
+      "sell": 42
+    },
+    {
+      "id": "blueberry_muffin",
+      "name": "蓝莓松饼",
+      "nameEn": "Blueberry Muffin",
+      "emoji": "🧁",
+      "inputs": {
+        "wheat": 2,
+        "blueberry": 3
+      },
+      "minutes": 20,
+      "sell": 40
+    },
+    {
+      "id": "pumpkin_pie",
+      "name": "南瓜派",
+      "nameEn": "Pumpkin Pie",
+      "emoji": "🥧",
+      "inputs": {
+        "wheat": 2,
+        "pumpkin": 1
+      },
+      "minutes": 25,
+      "sell": 44
+    },
+    {
+      "id": "cherry_tart",
+      "name": "樱桃挞",
+      "nameEn": "Cherry Tart",
+      "emoji": "🍮",
+      "inputs": {
+        "wheat": 2,
+        "cherry": 3
+      },
+      "minutes": 25,
+      "sell": 48
+    },
+    {
+      "id": "dragon_smoothie",
+      "name": "火龙果奶昔",
+      "nameEn": "Dragon Fruit Smoothie",
+      "emoji": "🥤",
+      "inputs": {
+        "dragonfruit": 1,
+        "blueberry": 2
+      },
+      "minutes": 10,
+      "sell": 48
+    },
+    {
+      "id": "fruit_salad",
+      "name": "水果沙拉",
+      "nameEn": "Fruit Salad",
+      "emoji": "🥗",
+      "inputs": {
+        "strawberry": 1,
+        "blueberry": 1,
+        "cherry": 1,
+        "watermelon": 1
+      },
+      "minutes": 12,
+      "sell": 56
+    }
+  ]
+}

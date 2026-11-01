@@ -34,17 +34,27 @@ export function newKid({ name, age, avatar }) {
     id: 'k' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
     name, age, avatar,
     coins: 0,
-    inventory: { seeds: {}, items: {}, crops: {} },
+    inventory: { seeds: {}, items: {}, crops: {}, products: {}, decor: {} },
     farm: { plots: Array.from({ length: 8 }, () => null), harvests: 0, unlocked: [] },
+    factory: { slots: [null, null] },
+    room: null, // 第一次打开房间时按 decor.json 初始化
     stats: { rounds: 0, answered: 0, correct: 0, wrong: 0, coinsEarned: 0, best: 0, lastPlayed: 0 },
     createdAt: Date.now(),
   };
 }
 
+function normalize(st) {
+  for (const k of st.kids || []) {
+    k.inventory = { seeds: {}, items: {}, crops: {}, products: {}, decor: {}, ...(k.inventory || {}) };
+    k.factory = k.factory || { slots: [null, null] };
+    if (!k.room) k.room = null;
+  }
+  return st;
+}
 let state = (() => {
   const d = adapter.load();
   if (!d) return DEFAULTS();
-  return { ...DEFAULTS(), ...d, settings: { ...DEFAULT_SETTINGS(), ...(d.settings || {}) } };
+  return normalize({ ...DEFAULTS(), ...d, settings: { ...DEFAULT_SETTINGS(), ...(d.settings || {}) } });
 })();
 
 export const getState = () => state;
@@ -72,7 +82,7 @@ export function exportJSON() { return JSON.stringify(state, null, 2); }
 export function importJSON(text) {
   const d = JSON.parse(text);
   if (!d || !Array.isArray(d.kids)) throw new Error('不是有效的存档文件');
-  state = { ...DEFAULTS(), ...d, settings: { ...DEFAULT_SETTINGS(), ...(d.settings || {}) } };
+  state = normalize({ ...DEFAULTS(), ...d, settings: { ...DEFAULT_SETTINGS(), ...(d.settings || {}) } });
   update(() => {});
 }
 export function resetAll() { state = DEFAULTS(); update(() => {}); }

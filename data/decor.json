@@ -1,0 +1,233 @@
+{
+  "_说明": "儿童房家具。type：floor 地面家具（w、d 是占几格），wall 墙上挂件，sheet 床单花色（换到床上）。variant 决定画法。",
+  "floor": {
+    "cols": 4,
+    "rows": 4
+  },
+  "items": [
+    {
+      "id": "bed",
+      "name": "小床",
+      "nameEn": "Bed",
+      "emoji": "🛏️",
+      "type": "floor",
+      "w": 1,
+      "d": 2,
+      "price": 0,
+      "variant": "bed",
+      "starter": true
+    },
+    {
+      "id": "desk",
+      "name": "书桌",
+      "nameEn": "Desk",
+      "emoji": "🪑",
+      "type": "floor",
+      "w": 2,
+      "d": 1,
+      "price": 0,
+      "variant": "desk",
+      "starter": true
+    },
+    {
+      "id": "chair",
+      "name": "小椅子",
+      "nameEn": "Chair",
+      "emoji": "🪑",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 25,
+      "variant": "chair"
+    },
+    {
+      "id": "desk_big",
+      "name": "大书桌",
+      "nameEn": "Big Desk",
+      "emoji": "🖥️",
+      "type": "floor",
+      "w": 2,
+      "d": 1,
+      "price": 60,
+      "variant": "desk_big"
+    },
+    {
+      "id": "bookshelf",
+      "name": "书柜",
+      "nameEn": "Bookshelf",
+      "emoji": "📚",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 70,
+      "variant": "bookshelf"
+    },
+    {
+      "id": "lamp",
+      "name": "台灯",
+      "nameEn": "Lamp",
+      "emoji": "🛋️",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 20,
+      "variant": "lamp"
+    },
+    {
+      "id": "plant",
+      "name": "小盆栽",
+      "nameEn": "Plant",
+      "emoji": "🪴",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 15,
+      "variant": "plant"
+    },
+    {
+      "id": "toybox",
+      "name": "玩具箱",
+      "nameEn": "Toy Box",
+      "emoji": "🧸",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 45,
+      "variant": "toybox"
+    },
+    {
+      "id": "teddy",
+      "name": "泰迪熊",
+      "nameEn": "Teddy Bear",
+      "emoji": "🧸",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 20,
+      "variant": "teddy"
+    },
+    {
+      "id": "wardrobe",
+      "name": "衣柜",
+      "nameEn": "Wardrobe",
+      "emoji": "🚪",
+      "type": "floor",
+      "w": 1,
+      "d": 1,
+      "price": 80,
+      "variant": "wardrobe"
+    },
+    {
+      "id": "rug_round",
+      "name": "圆地毯",
+      "nameEn": "Round Rug",
+      "emoji": "🟠",
+      "type": "rug",
+      "w": 2,
+      "d": 2,
+      "price": 30,
+      "variant": "rug_round"
+    },
+    {
+      "id": "rug_star",
+      "name": "星星地毯",
+      "nameEn": "Star Rug",
+      "emoji": "⭐",
+      "type": "rug",
+      "w": 2,
+      "d": 2,
+      "price": 40,
+      "variant": "rug_star"
+    },
+    {
+      "id": "sheet_stars",
+      "name": "星星床单",
+      "nameEn": "Star Sheets",
+      "emoji": "🌟",
+      "type": "sheet",
+      "price": 30,
+      "pattern": "stars"
+    },
+    {
+      "id": "sheet_rainbow",
+      "name": "彩虹床单",
+      "nameEn": "Rainbow Sheets",
+      "emoji": "🌈",
+      "type": "sheet",
+      "price": 30,
+      "pattern": "rainbow"
+    },
+    {
+      "id": "sheet_dino",
+      "name": "恐龙床单",
+      "nameEn": "Dino Sheets",
+      "emoji": "🦕",
+      "type": "sheet",
+      "price": 35,
+      "pattern": "dino"
+    },
+    {
+      "id": "sheet_flowers",
+      "name": "小花床单",
+      "nameEn": "Flower Sheets",
+      "emoji": "🌸",
+      "type": "sheet",
+      "price": 35,
+      "pattern": "flowers"
+    },
+    {
+      "id": "sheet_ocean",
+      "name": "海洋床单",
+      "nameEn": "Ocean Sheets",
+      "emoji": "🐳",
+      "type": "sheet",
+      "price": 35,
+      "pattern": "ocean"
+    },
+    {
+      "id": "poster_rocket",
+      "name": "火箭海报",
+      "nameEn": "Rocket Poster",
+      "emoji": "🚀",
+      "type": "wall",
+      "price": 20,
+      "variant": "poster"
+    },
+    {
+      "id": "poster_dino",
+      "name": "恐龙海报",
+      "nameEn": "Dino Poster",
+      "emoji": "🦖",
+      "type": "wall",
+      "price": 20,
+      "variant": "poster"
+    },
+    {
+      "id": "poster_abc",
+      "name": "字母海报",
+      "nameEn": "ABC Poster",
+      "emoji": "🔤",
+      "type": "wall",
+      "price": 15,
+      "variant": "poster"
+    },
+    {
+      "id": "poster_map",
+      "name": "世界地图",
+      "nameEn": "World Map",
+      "emoji": "🗺️",
+      "type": "wall",
+      "price": 25,
+      "variant": "poster"
+    },
+    {
+      "id": "clock",
+      "name": "挂钟",
+      "nameEn": "Wall Clock",
+      "emoji": "🕒",
+      "type": "wall",
+      "price": 20,
+      "variant": "clock"
+    }
+  ]
+}
