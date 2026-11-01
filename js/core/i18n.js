@@ -66,7 +66,7 @@ const DICT = {
     // 杂货店 / 家具
     shopName: '杂货店', tabDecor: '🛏️ 家具', tabSellAll: '🧺 卖东西', products: '🍰 成品', noProducts: '还没有成品，去加工厂做一些吧。', decorOwned: '已拥有', decorBought: '已买到，去房间里摆上吧！', sheetBought: '已买到，点床就能换上！',
     // 房间
-    room: '我的房间', roomHint: '点家具可以旋转、挪动；点地砖把它放过去', place: '🪑 摆家具', rotate: '⟳ 旋转', move: '👉 点地砖挪过去', putAway: '🎒 收起来', changeSheet: '🛏️ 换床单', noSpace: '那里放不下', nothingToPlace: '还没有新家具，去杂货店看看吧', pickSheet: '选一款床单', plainSheet: '白床单', hangWhere: '挂在哪面墙？', leftWall: '左边墙', rightWall: '右边墙', wallFull: '墙上挂满了', placedToast: '摆好了！', putAwayToast: '收进仓库了', furnitureSec: '🛏️ 家具',
+    room: '我的房间', farmPage: '回农场', placeShort: '摆家具', haveToPlace: '背包里有 {n} 件家具可以摆', roomHint: '点家具可以旋转、挪动；点地砖把它放过去', place: '🪑 摆家具', rotate: '⟳ 旋转', move: '👉 点地砖挪过去', putAway: '🎒 收起来', changeSheet: '🛏️ 换床单', noSpace: '那里放不下', nothingToPlace: '还没有新家具，去杂货店看看吧', pickSheet: '选一款床单', plainSheet: '白床单', hangWhere: '挂在哪面墙？', leftWall: '左边墙', rightWall: '右边墙', wallFull: '墙上挂满了', placedToast: '摆好了！', putAwayToast: '收进仓库了', furnitureSec: '🛏️ 家具',
     // 时间
     sec: '{n} 秒', min: '{n} 分钟', hour: '{n} 小时', hourMin: '{h} 小时 {m} 分', dayHour: '{d} 天 {h} 小时',
   },
@@ -121,7 +121,7 @@ const DICT = {
     factory: 'Factory', factoryTitle: '🏭 Food Factory', factoryIntro: 'Turn your harvest into tasty food that sells for much more!', slotIdle: 'Idle', slotWorking: 'Making… {time} left', slotDone: 'Ready!', collect: '✨ Collect',
     make: '🍳 Make', needMore: 'Not enough ingredients', noSlot: 'Both slots are busy', inputsLine: 'Needs', sellsFor: 'Sells 🪙 {n}', takes: '⏱ {time}', haveN: 'have {n}', producedToast: '{name} is ready, put in your backpack 🎒', startedToast: 'Started making {name}',
     shopName: 'General Store', tabDecor: '🛏️ Furniture', tabSellAll: '🧺 Sell', products: '🍰 Products', noProducts: 'No products yet. Make some at the factory.', decorOwned: 'Owned', decorBought: 'Bought! Place it in your room.', sheetBought: 'Bought! Tap the bed to change sheets.',
-    room: 'My Room', roomHint: 'Tap furniture to rotate or move it; tap a floor tile to move it there', place: '🪑 Place furniture', rotate: '⟳ Rotate', move: '👉 Tap a tile to move', putAway: '🎒 Put away', changeSheet: '🛏️ Change sheets', noSpace: "It doesn't fit there", nothingToPlace: 'No new furniture yet. Visit the store!', pickSheet: 'Pick sheets', plainSheet: 'Plain sheets', hangWhere: 'Which wall?', leftWall: 'Left wall', rightWall: 'Right wall', wallFull: 'The wall is full', placedToast: 'Placed!', putAwayToast: 'Put in your backpack', furnitureSec: '🛏️ Furniture',
+    room: 'My Room', farmPage: 'Back to farm', placeShort: 'Place furniture', haveToPlace: '{n} item(s) in your backpack to place', roomHint: 'Tap furniture to rotate or move it; tap a floor tile to move it there', place: '🪑 Place furniture', rotate: '⟳ Rotate', move: '👉 Tap a tile to move', putAway: '🎒 Put away', changeSheet: '🛏️ Change sheets', noSpace: "It doesn't fit there", nothingToPlace: 'No new furniture yet. Visit the store!', pickSheet: 'Pick sheets', plainSheet: 'Plain sheets', hangWhere: 'Which wall?', leftWall: 'Left wall', rightWall: 'Right wall', wallFull: 'The wall is full', placedToast: 'Placed!', putAwayToast: 'Put in your backpack', furnitureSec: '🛏️ Furniture',
     sec: '{n} s', min: '{n} min', hour: '{n} h', hourMin: '{h} h {m} min', dayHour: '{d} d {h} h',
   },
 };

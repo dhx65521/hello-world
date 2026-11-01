@@ -8,12 +8,12 @@ import { loadFarmData, seedById, itemById, loadDecorData, decorById } from './ho
 import { loadFactoryData, recipeById } from './factory.js';
 import { t, name } from '../core/i18n.js';
 
-export async function bagScene() {
+export async function bagScene({ from = 'home' } = {}) {
   const kid = currentKid();
   if (!kid) return go('kids');
   await Promise.all([loadFarmData(), loadFactoryData(), loadDecorData()]);
   audio.music('shop');
-  const ui = scene({ title: t('bagTitle'), theme: 'sky', left: button('🏠', () => go('home'), 'icon'), right: [coinChip(), muteButton()], scroll: true });
+  const ui = scene({ title: t('bagTitle'), theme: 'sky', left: button(from === 'room' ? '🛏️' : '🏠', () => go(from), 'icon'), right: [coinChip(), muteButton()], scroll: true });
   const inv = kid.inventory;
   const section = (title, entries, lookup, empty, extra = null) => {
     const grid = h('div', { class: 'bag-grid' });
@@ -26,9 +26,9 @@ export async function bagScene() {
   const cropsCount = Object.values(inv.crops).reduce((a, b) => a + b, 0) + Object.values(inv.products || {}).reduce((a, b) => a + b, 0);
   ui.body.append(
     h('div', { class: 'card coins-card' }, h('div', { class: 'big-emoji' }, '🪙'), h('div', { class: 'h1' }, t('coinsCount', { n: kid.coins })), h('div', { class: 'hint' }, t('harvestedTimes', { n: kid.farm.harvests || 0 }))),
-    section(t('seeds'), inv.seeds, seedById, t('noSeedsBag'), h('div', { class: 'row left', style: { marginTop: '10px' } }, button(t('goShop'), () => go('shop'), 'soft'))),
+    section(t('seeds'), inv.seeds, seedById, t('noSeedsBag'), h('div', { class: 'row left', style: { marginTop: '10px' } }, button(t('goShop'), () => go('shop', { from }), 'soft'))),
     section(t('items'), inv.items, itemById, t('noItems')),
-    section(t('crops'), inv.crops, seedById, t('noCropsBag'), cropsCount ? h('div', { class: 'row left', style: { marginTop: '10px' } }, button(t('goSell'), () => go('shop', { tab: 'sell' }), 'primary')) : null),
+    section(t('crops'), inv.crops, seedById, t('noCropsBag'), cropsCount ? h('div', { class: 'row left', style: { marginTop: '10px' } }, button(t('goSell'), () => go('shop', { tab: 'sell', from }), 'primary')) : null),
     section(t('products'), inv.products || {}, recipeById, t('noProducts'), h('div', { class: 'row left', style: { marginTop: '10px' } }, button(t('factoryTitle'), () => go('factory'), 'soft'))),
     section(t('furnitureSec'), inv.decor || {}, decorById, t('nothingToPlace')),
     h('div', { class: 'card' }, h('div', { class: 'h2' }, t('mathRecord')),
