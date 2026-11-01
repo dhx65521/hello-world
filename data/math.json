@@ -4,7 +4,7 @@
   "ops": ["+", "-"],
   "minSum": 2,
   "bigRatio": 0.6,
-  "idleMs": 900,
+  "idleMs": 1500,
   "minConfidence": 0.55,
   "wrongShowAnswerMs": 1800
 }

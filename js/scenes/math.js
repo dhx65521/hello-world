@@ -24,7 +24,6 @@ export async function mathScene() {
   // ---------- 状态 ----------
   const total = Number(setting('roundSeconds')) || 300;
   const reward = Number(setting('rewardCoins')) || 1;
-  const penalty = Number(setting('penaltyCoins')) || 0;
   let remaining = total, timer = null, running = false, ended = false;
   let q = null, attempts = 0, busy = false;
   const stats = { answered: 0, correct: 0, wrong: 0, net: 0, earned: 0 };
@@ -34,13 +33,14 @@ export async function mathScene() {
   const qText = h('div', { class: 'q-text' });
   const feedback = h('div', { class: 'q-feedback' });
   const score = h('div', { class: 'q-score' });
-  const qPanel = h('div', { class: 'q-panel' }, timerEl, qText, feedback, score);
+  const qPanel = h('div', { class: 'q-panel' }, timerEl, h('div', { class: 'q-main' }, qText, feedback), score);
 
   const recog = h('div', { class: 'recog' }, '　');
   const boxes = [makeBox(), makeBox()];
-  const padRow = h('div', { class: 'pad-row' }, boxes[0].el, boxes[1].el);
-  const clearBtn = button('🧹 擦掉', () => { clearPad(); audio.sfx('erase'); }, 'soft');
-  const padPanel = h('div', { class: 'pad-panel' }, h('div', { class: 'pad-title' }, '✍️ 把答案写在这里'), recog, padRow, h('div', { class: 'row' }, clearBtn));
+  const clearBtn = button('🧹', () => { clearPad(); audio.sfx('erase'); }, 'icon round clear-btn');
+  clearBtn.setAttribute('aria-label', '擦掉重写');
+  const padRow = h('div', { class: 'pad-row' }, boxes[0].el, boxes[1].el, clearBtn);
+  const padPanel = h('div', { class: 'pad-panel' }, h('div', { class: 'pad-title' }, '✍️ 把答案写在这里，写完停一下就会自动判断'), recog, padRow);
   ui.body.append(h('div', { class: 'math-layout' }, qPanel, padPanel));
 
   // ---------- 手写板 ----------
@@ -152,9 +152,7 @@ export async function mathScene() {
       attempts += 1;
       shake(qPanel); audio.sfx('wrong');
       if (attempts === 1) {
-        let deducted = 0;
-        if (penalty > 0) { const before = currentKid().coins; const after = addCoins(-penalty); deducted = before - after; stats.net -= deducted; refreshCoins(); }
-        feedback.textContent = deducted ? `❌ 不对哦 −${deducted}，再写一次` : '❌ 不对哦，再写一次';
+        feedback.textContent = '再想一想，再写一次 ✏️';
         feedback.className = 'q-feedback bad';
         await sleep(600);
         clearPad();
@@ -216,7 +214,7 @@ export async function mathScene() {
   showOverlay(h('div', { class: 'dialog' },
     h('div', { class: 'big-emoji' }, '✏️'),
     h('div', { class: 'dialog-title' }, `${fmtTime(total)} 倒计时`),
-    h('div', { class: 'hint' }, `答对一题 +${reward} 🪙${penalty ? `，答错 −${penalty} 🪙（可以再写一次）` : ''}。两位数写两格，一位数写一格就行。`),
+    h('div', { class: 'hint' }, `答对一题 +${reward} 🪙，答错不扣，可以再写一次。两位数写两格，一位数写一格就行。`),
     button('▶ 开始！', () => { hideOverlay(); startRound(); }, 'primary big'),
   ));
   window.addEventListener('resize', () => boxes.forEach((b) => b.resize()), { once: false });
