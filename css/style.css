@@ -225,3 +225,119 @@ button, input { font-family: inherit; color: inherit; }
   .digit-box { width: 44%; }
   .kid-grid { gap: 12px; }
 }
+
+/* =====================================================================
+   农场
+   ===================================================================== */
+#app.theme-shop { background: linear-gradient(#FFF1D6, #FFE4C2); }
+.farm-layout { align-items: stretch; }
+.farm-board { flex: 1 1 auto; max-width: 680px; border-radius: 32px; overflow: hidden; background: #BFE39C; box-shadow: 0 8px 0 var(--shadow); display: flex; flex-direction: column; position: relative; }
+.farm-board .farm-sky { height: 80px; flex: 0 0 auto; }
+.farm-sky .bird { position: absolute; top: 30px; left: -40px; font-size: 22px; animation: fly 18s linear infinite; }
+.farm-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px 14px 8px; }
+.fence { height: 18px; background: repeating-linear-gradient(90deg, #C98B4A 0 10px, transparent 10px 22px); margin: 0 10px 10px; border-bottom: 5px solid #C98B4A; opacity: .8; }
+.plot { position: relative; aspect-ratio: 1.15; border-radius: 16px; overflow: visible; cursor: pointer; transition: transform .1s; }
+.plot:active { transform: scale(.97); }
+.plot .soil { position: absolute; inset: 0; border-radius: 16px; background: #B47748; box-shadow: inset 0 -8px 0 #93592F, inset 0 0 0 3px rgba(255,255,255,.15); transition: background .4s; }
+.plot .soil.wet { background: #8E5A33; box-shadow: inset 0 -8px 0 #6E4224, inset 0 0 0 3px rgba(255,255,255,.1); }
+.plot.selected .soil { outline: 4px solid #FFD93D; outline-offset: -2px; }
+.plot.ripe .soil { box-shadow: inset 0 -8px 0 #6E4224, 0 0 0 4px rgba(255,217,61,.7); animation: glow 1.4s ease-in-out infinite; }
+.plot .plot-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 34px; color: rgba(255,255,255,.55); font-weight: 800; }
+.plot .plant { position: absolute; inset: -12% 6% 4% 6%; }
+.plant-svg { width: 100%; height: 100%; overflow: visible; }
+.plant-svg .sway { transform-origin: 50% 85%; animation: sway 3.2s ease-in-out infinite; }
+.plot:nth-child(2n) .plant-svg .sway { animation-delay: -1.1s; }
+.plot:nth-child(3n) .plant-svg .sway { animation-delay: -2.2s; }
+.plot .badge { position: absolute; top: -10px; right: -8px; width: 38px; height: 38px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 3px 0 var(--shadow); }
+.plot .water-badge { animation: bob 1s ease-in-out infinite; }
+.plot .ripe-badge { animation: pulse 1s ease-in-out infinite; background: #FFF4CC; }
+.plot .badge.ring { background: conic-gradient(var(--green) calc(var(--p, 0) * 1%), #E8EEF4 0); }
+.plot .badge.ring::after { content: '⏳'; position: absolute; inset: 4px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.plot .bug { position: absolute; bottom: 18%; left: 20%; font-size: 24px; animation: crawl 2.4s ease-in-out infinite; }
+.plot .bug.flee { animation: flee .7s ease-in forwards; }
+.plot .weeds { position: absolute; inset: 0; pointer-events: none; }
+.plot .weed { position: absolute; font-size: 22px; transition: transform .3s, opacity .3s; }
+.plot .weed.w0 { left: 6%; bottom: 10%; } .plot .weed.w1 { right: 8%; bottom: 14%; } .plot .weed.w2 { left: 40%; bottom: 4%; }
+.plot .weed.pulled { transform: translateY(-40px) rotate(40deg); opacity: 0; }
+.plot .can { position: absolute; top: -30px; right: 10%; font-size: 36px; animation: tilt .9s ease-in-out; }
+.plot .drops { position: absolute; inset: 0; pointer-events: none; }
+.plot .drops span { position: absolute; top: 0; left: calc(15% + var(--k) * 13%); font-size: 16px; animation: drop .7s ease-in forwards; animation-delay: calc(var(--k) * 0.08s); opacity: 0; }
+.plot .seed-drop { position: absolute; left: 45%; top: -20px; font-size: 24px; animation: seeddrop .5s ease-in forwards; }
+.plot .mist { position: absolute; top: -20px; left: 10%; font-size: 30px; animation: tilt .7s ease-in-out; }
+
+.home-side { display: flex; flex-direction: column; gap: 14px; min-width: 320px; max-width: 420px; flex: 0 1 auto; }
+.plot-panel { background: #fff; border-radius: 24px; padding: 14px 18px; box-shadow: 0 6px 0 var(--shadow); min-height: 120px; display: flex; flex-direction: column; gap: 10px; }
+.panel-hint { color: var(--ink-soft); font-size: 20px; text-align: center; margin: auto; }
+.panel-head { display: flex; align-items: center; gap: 12px; font-size: 22px; }
+.panel-head .em { font-size: 40px; }
+.stage-bar { display: flex; gap: 6px; }
+.stage-bar span { flex: 1; height: 12px; border-radius: 6px; background: #E8EEF4; overflow: hidden; position: relative; }
+.stage-bar span.done { background: var(--green); }
+.stage-bar span.cur i { display: block; height: 100%; background: var(--green); border-radius: 6px; transition: width 1s linear; }
+.panel-status { font-weight: 800; font-size: 20px; }
+.plot-panel .btn { min-height: 60px; font-size: 22px; padding: 6px 18px; }
+.seed-pick { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 560px; }
+.seed-btn { flex-direction: column; gap: 2px; width: 120px; height: 120px; padding: 0; font-size: 20px; }
+.seed-btn .em { font-size: 44px; line-height: 1; } .seed-btn .cnt { font-size: 15px; color: var(--ink-soft); }
+
+/* 商店 */
+.keeper { display: flex; align-items: center; gap: 14px; width: min(900px, 100%); }
+.keeper .face { font-size: 64px; line-height: 1; }
+.bubble { background: #fff; border-radius: 22px; padding: 12px 20px; font-size: 22px; font-weight: 700; box-shadow: 0 4px 0 var(--shadow); position: relative; }
+.bubble::before { content: ''; position: absolute; left: -12px; top: 50%; border: 8px solid transparent; border-right-color: #fff; transform: translateY(-50%); }
+.shop-tabs .btn { min-height: 56px; font-size: 22px; }
+.shop-content { width: min(1000px, 100%); }
+.shop-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+.shop-card { width: 220px; background: #fff; border-radius: 24px; padding: 14px 14px 16px; box-shadow: 0 6px 0 var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.shop-card .em { font-size: 56px; line-height: 1.1; }
+.shop-card .name { font-size: 24px; font-weight: 800; }
+.shop-card .meta { font-size: 14px; color: var(--ink-soft); min-height: 36px; }
+.shop-card .own { font-size: 15px; color: var(--ink-soft); }
+.shop-card .btn { min-height: 56px; font-size: 20px; padding: 6px 16px; margin-top: 4px; }
+.shop-card.locked { opacity: .75; background: #F3F5F7; }
+.bag-slot .nm { font-size: 14px; font-weight: 700; }
+
+@keyframes sway { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes glow { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.12); } }
+@keyframes crawl { 0% { transform: translateX(0) scaleX(1); } 45% { transform: translateX(34px) scaleX(1); } 50% { transform: translateX(34px) scaleX(-1); } 95% { transform: translateX(0) scaleX(-1); } 100% { transform: translateX(0) scaleX(1); } }
+@keyframes flee { to { transform: translate(80px, -60px) rotate(30deg); opacity: 0; } }
+@keyframes tilt { 0% { transform: rotate(0); } 30% { transform: rotate(-35deg); } 80% { transform: rotate(-35deg); } 100% { transform: rotate(0); } }
+@keyframes drop { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+@keyframes seeddrop { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(50px) scale(.4); opacity: 0; } }
+@keyframes fly { from { transform: translateX(0); } to { transform: translateX(120vw); } }
+
+@media (max-width: 760px), (max-height: 520px) {
+  .farm-board .farm-sky { height: 44px; }
+  .farm-grid { gap: 6px; padding: 8px 8px 4px; }
+  .plot .badge { width: 26px; height: 26px; font-size: 14px; top: -6px; right: -4px; }
+  .plot .badge.ring::after { font-size: 11px; inset: 3px; }
+  .plot .bug { font-size: 16px; } .plot .weed { font-size: 15px; }
+  .fence { height: 10px; margin: 0 6px 6px; }
+  .home-side { min-width: 0; gap: 8px; }
+  .plot-panel { padding: 10px 12px; min-height: 80px; gap: 6px; }
+  .panel-hint { font-size: 16px; } .panel-head { font-size: 18px; } .panel-head .em { font-size: 30px; } .panel-status { font-size: 16px; }
+  .plot-panel .btn { min-height: 46px; font-size: 17px; padding: 4px 12px; }
+  .keeper .face { font-size: 40px; } .bubble { font-size: 17px; padding: 8px 14px; }
+  .shop-card { width: 150px; padding: 10px; } .shop-card .em { font-size: 40px; } .shop-card .name { font-size: 18px; } .shop-card .meta { font-size: 12px; min-height: 30px; }
+  .shop-card .btn { min-height: 44px; font-size: 16px; }
+  .seed-btn { width: 90px; height: 90px; font-size: 15px; } .seed-btn .em { font-size: 32px; }
+}
+@media (max-height: 520px) {
+  .farm-board { max-width: 46vw; }
+  .farm-board .farm-sky { height: 30px; }
+  .home-side { max-width: 48vw; }
+}
+@media (max-width: 520px) {
+  .farm-board { max-width: none; width: 100%; }
+  .home-side { width: 100%; max-width: none; }
+  .home-menu { flex-direction: row; }
+  .home-btn { flex: 1 1 30%; min-height: 60px; font-size: 16px; padding: 4px 8px; flex-direction: column; gap: 2px; }
+  .home-btn .emoji { font-size: 26px; }
+}
+/* 农场板高度随内容，不拉伸 */
+.farm-layout { align-items: flex-start; }
+.farm-board { flex: 0 1 auto; }
+.home-side { position: sticky; top: 0; }
+.home-btn span:last-child { white-space: nowrap; }
+@media (max-width: 520px) { .home-btn { font-size: 15px; } }

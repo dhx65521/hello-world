@@ -1,0 +1,19 @@
+{
+  "_说明": "种子与道具。price 买价，growHours 从种下到成熟的总小时数（分 4 段生长，每段开始要浇水），yield 产量，sell 每个果实卖价，unlock 需要的累计收获次数。",
+  "seeds": [
+    { "id": "tomato", "name": "番茄", "emoji": "🍅", "price": 4, "growHours": 1, "yield": 3, "sell": 2, "unlock": 0, "flower": "#FFE66D", "kind": "bush" },
+    { "id": "sunflower", "name": "向日葵", "emoji": "🌻", "price": 5, "growHours": 2, "yield": 2, "sell": 3, "unlock": 0, "flower": "#FFD93D", "kind": "tall" },
+    { "id": "strawberry", "name": "草莓", "emoji": "🍓", "price": 6, "growHours": 3, "yield": 4, "sell": 2, "unlock": 0, "flower": "#FFFFFF", "kind": "low" },
+    { "id": "blueberry", "name": "蓝莓", "emoji": "🫐", "price": 8, "growHours": 4, "yield": 5, "sell": 2, "unlock": 2, "flower": "#F3E8FF", "kind": "bush" },
+    { "id": "pumpkin", "name": "南瓜", "emoji": "🎃", "price": 10, "growHours": 8, "yield": 2, "sell": 6, "unlock": 4, "flower": "#FFB347", "kind": "vine" },
+    { "id": "cherry", "name": "樱桃", "emoji": "🍒", "price": 12, "growHours": 12, "yield": 6, "sell": 3, "unlock": 6, "flower": "#FFC9DE", "kind": "tall" },
+    { "id": "watermelon", "name": "西瓜", "emoji": "🍉", "price": 15, "growHours": 24, "yield": 2, "sell": 10, "unlock": 8, "flower": "#FFF3B0", "kind": "vine" },
+    { "id": "dragonfruit", "name": "火龙果", "emoji": "🐉", "price": 20, "growHours": 48, "yield": 3, "sell": 9, "unlock": 10, "flower": "#FFE4F1", "kind": "tall" }
+  ],
+  "items": [
+    { "id": "fertilizer", "name": "化肥", "emoji": "💩", "price": 3, "desc": "让植物当前这一段立刻长完" },
+    { "id": "pesticide", "name": "杀虫剂", "emoji": "🧴", "price": 3, "desc": "把虫子赶走" }
+  ],
+  "stageNames": ["种子", "发芽", "长叶", "开花", "成熟"],
+  "events": { "bugChance": 0.3, "weedChance": 0.35, "weedTaps": 3, "bugPenalty": 1 }
+}
