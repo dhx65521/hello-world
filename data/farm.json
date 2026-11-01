@@ -41,6 +41,19 @@
       "nameEn": "Strawberry"
     },
     {
+      "id": "wheat",
+      "name": "小麦",
+      "nameEn": "Wheat",
+      "emoji": "🌾",
+      "price": 3,
+      "growHours": 1.5,
+      "yield": 4,
+      "sell": 1,
+      "unlock": 0,
+      "flower": "#F3E5AB",
+      "kind": "tall"
+    },
+    {
       "id": "blueberry",
       "name": "蓝莓",
       "emoji": "🫐",
@@ -65,6 +78,19 @@
       "flower": "#FFB347",
       "kind": "vine",
       "nameEn": "Pumpkin"
+    },
+    {
+      "id": "corn",
+      "name": "玉米",
+      "nameEn": "Corn",
+      "emoji": "🌽",
+      "price": 7,
+      "growHours": 5,
+      "yield": 3,
+      "sell": 3,
+      "unlock": 3,
+      "flower": "#FFF3B0",
+      "kind": "tall"
     },
     {
       "id": "cherry",

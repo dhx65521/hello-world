@@ -406,3 +406,46 @@ button, input { font-family: inherit; color: inherit; }
   .home-btn { font-size: 22px; min-width: 0; padding: 8px 12px; }
   .home-btn .lbl { align-items: center; }
 }
+
+/* ========== 主界面左列：农场 + 房间 ========== */
+.home-left { display: flex; flex-direction: column; gap: 14px; flex: 1 1 0%; min-width: 0; max-width: min(940px, calc((100vh - 200px) * 1.5)); }
+.home-left .farm-board { max-width: none; width: 100%; }
+.farm-layout { align-items: flex-start; }
+.room-wrap { background: #fff; border-radius: 32px; box-shadow: 0 8px 0 var(--shadow); padding: 10px 14px 6px; }
+.room-title { font-weight: 800; color: var(--ink-soft); font-size: 20px; padding: 2px 8px 4px; }
+.room-board { width: 100%; }
+.room-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.room-svg .tile { cursor: pointer; transition: filter .15s; }
+.room-svg .tile.target { stroke: #FFD93D; stroke-width: 3; filter: brightness(1.08); }
+.room-svg .room-item { cursor: pointer; }
+.room-svg .room-item:active { filter: brightness(1.05); }
+.room-svg text { pointer-events: none; }
+.home-btn .dot { margin-left: auto; background: #FF6B6B; color: #fff; border-radius: 999px; min-width: 28px; height: 28px; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; padding: 0 8px; }
+.seed-btn.on { background: var(--green); color: #fff; }
+
+/* ========== 加工厂 ========== */
+.slots-row { display: flex; gap: 18px; justify-content: center; width: min(900px, 100%); }
+.fslot { flex: 1 1 0; max-width: 320px; background: #fff; border-radius: 26px; padding: 16px; box-shadow: 0 6px 0 var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 170px; border: 4px dashed #E6EDF4; }
+.fslot.busy { border-style: solid; border-color: #FFD56B; }
+.fslot.done { border-style: solid; border-color: var(--green); animation: glow 1.4s ease-in-out infinite; }
+.fslot .em { font-size: 56px; line-height: 1.1; }
+.fslot.busy .em { animation: bob 1.2s ease-in-out infinite; }
+.fslot .nm { font-weight: 800; font-size: 22px; }
+.fslot .st { color: var(--ink-soft); font-size: 17px; }
+.fslot .bar { width: 100%; height: 12px; border-radius: 6px; background: #EEF3F8; overflow: hidden; }
+.fslot .bar i { display: block; height: 100%; background: var(--yellow); border-radius: 6px; transition: width 1s linear; }
+.recipe .inputs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; font-size: 15px; min-height: 24px; }
+.recipe .inp { background: #FFE3E3; border-radius: 999px; padding: 2px 8px; font-weight: 700; }
+.recipe .inp.ok { background: #E6F7E8; }
+.recipe .inp small { font-weight: 500; color: var(--ink-soft); }
+.recipe.lack { opacity: .8; }
+
+@media (max-width: 760px), (max-height: 520px) {
+  .room-wrap { padding: 6px 8px 4px; border-radius: 22px; } .room-title { font-size: 15px; }
+  .fslot { padding: 10px; min-height: 120px; } .fslot .em { font-size: 36px; } .fslot .nm { font-size: 17px; }
+  .home-btn .dot { min-width: 22px; height: 22px; font-size: 13px; }
+}
+@media (max-height: 520px) { .home-left { max-width: 46vw; } }
+@media (max-width: 520px), ((orientation: portrait) and (max-width: 900px)) { .home-left { max-width: none; width: 100%; } }
+/* 右侧按钮列吸顶（横屏） */
+@media (min-width: 761px) and (min-height: 521px) and (orientation: landscape) { .home-side { position: sticky; top: 0; align-self: flex-start; } }
