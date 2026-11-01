@@ -363,3 +363,28 @@ button, input { font-family: inherit; color: inherit; }
 .home-btn .sub { font-size: 15px; font-weight: 600; opacity: .85; white-space: nowrap; }
 .home-btn.dim { opacity: .7; }
 @media (max-width: 520px) { .home-btn .lbl { align-items: center; } .home-btn .sub { font-size: 11px; } }
+
+/* ========== 小龄模式 ========== */
+.little-prompt { font-size: clamp(40px, 6vw, 72px); }
+.listen-btn { min-height: 60px; font-size: 24px; }
+.little-area { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.num-cards { display: flex; gap: 28px; justify-content: center; align-items: center; width: 100%; }
+.num-card {
+  width: min(26%, 42vh, 300px); aspect-ratio: 1; border: none; border-radius: 36px; background: #fff; box-shadow: 0 10px 0 var(--shadow), inset 0 0 0 5px #E6EDF4;
+  font-size: clamp(72px, 16vh, 160px); font-weight: 800; color: var(--ink); transition: transform .1s, opacity .3s;
+}
+.num-card:active { transform: translateY(6px); }
+.num-card.tried { opacity: .35; }
+.num-card.correct, .num-card.reveal { background: var(--green); color: #fff; box-shadow: 0 10px 0 rgba(60,120,60,.35); animation: pop .5s ease; }
+.num-card.model { background: #FFF4CC; cursor: pointer; }
+.copy-row { display: flex; align-items: center; justify-content: center; gap: 24px; width: 100%; }
+.copy-row .arrow { font-size: 48px; }
+.copy-pad { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.copy-pad .digit-box { width: min(42vh, 300px, 34vw); }
+@media (max-width: 760px), (max-height: 520px) {
+  .listen-btn { min-height: 44px; font-size: 17px; }
+  .num-cards { gap: 12px; } .num-card { border-radius: 20px; font-size: clamp(44px, 14vh, 90px); }
+  .copy-row { gap: 10px; } .copy-row .arrow { font-size: 28px; }
+}
+@media (max-height: 520px) { .num-card { width: min(26%, 36vh); } .copy-pad .digit-box { width: min(36vh, 34vw); } .copy-row .num-card { width: min(36vh, 30vw); } }
+@media (max-width: 520px) { .num-card { width: 28%; } .copy-pad .digit-box { width: 40vw; } .copy-row .num-card { width: 34vw; } }

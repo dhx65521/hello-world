@@ -1,5 +1,5 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = 'e8793ac2cc';
+self.__VERSION = '1b1a778c03';
 self.__ASSETS = [
   "./",
   "./css/style.css",
@@ -20,6 +20,7 @@ self.__ASSETS = [
   "./js/core/limits.js",
   "./js/core/plants.js",
   "./js/core/router.js",
+  "./js/core/speech.js",
   "./js/core/store.js",
   "./js/core/ui.js",
   "./js/core/widgets.js",

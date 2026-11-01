@@ -1,10 +1,19 @@
 {
   "_说明": "数学闯关规则。max 是题目和答案允许的最大数字（不含），ops 是运算类型。",
   "max": 24,
-  "ops": ["+", "-"],
+  "ops": [
+    "+",
+    "-"
+  ],
   "minSum": 2,
   "bigRatio": 0.6,
   "idleMs": 1500,
   "minConfidence": 0.55,
-  "wrongShowAnswerMs": 1800
+  "wrongShowAnswerMs": 1800,
+  "little": {
+    "_说明": "5 岁以下的玩法：听题选卡片 + 照着写数字。max 是最大数字，cards 是选项数。",
+    "max": 9,
+    "cards": 3,
+    "copyRatio": 0.4
+  }
 }

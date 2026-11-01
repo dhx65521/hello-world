@@ -53,6 +53,13 @@ const DICT = {
     saveData: '💾 存档', exportSave: '📤 导出存档', importSave: '📥 导入存档', saveHint: '导出一个 JSON 文件（可存到“文件”或用隔空投送发到另一台设备），在另一台设备上导入即可搬家。',
     importOk: '导入成功', importFail: '导入失败：', reset: '⚠️ 重置', resetAll: '清空全部数据（账户和所有小朋友）', resetConfirm: '再点一次确认清空',
     about: 'ℹ️ 关于', aboutLine: '数学小农场 v{v} · 家庭自用 · 纯本地运行', checkUpdate: '🔄 检查更新',
+    // 小龄模式
+    whichIs: '哪个是 {n}？', whichIsSpoken: '下面哪个是数字 {n}？', copyDigit: '照着写 {n}', copyDigitSpoken: '照着写数字 {n}', listen: '🔊 再听一遍',
+    tryAgainPick: '再想一想，再选一次 👆', tryAgainSpoken: '再试一次', thatIs: '这个是 {n}', wellDone: '真棒！', isThis: '是这个，{n}', littleIntro: '听一听，选出正确的数字；或者照着写数字。答对一题 +{n} 🪙，答错可以再来一次。',
+    // 家长区：数学模式与语音
+    mathMode: '🧮 数学模式', modeAuto: '按年龄（5 岁以下听选 / 描写）', modeLittle: '听选 + 描写', modeBig: '手写算式',
+    voice: '🗣️ 语音', voiceHint: '用 iPad 自带的朗读声音。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音 › 中文 / 英语，下载带“增强”或“高级”的声音（如婷婷、Ava），下载后回到这里选中它。Siri 的声音不对网页开放。',
+    voiceTest: '试听', noVoices: '这个语言没有可用的声音', speechRate: '语速', slow: '慢', normalRate: '适中', fast: '正常',
     // 时间
     sec: '{n} 秒', min: '{n} 分钟', hour: '{n} 小时', hourMin: '{h} 小时 {m} 分', dayHour: '{d} 天 {h} 小时',
   },
@@ -99,6 +106,11 @@ const DICT = {
     saveData: '💾 Save data', exportSave: '📤 Export', importSave: '📥 Import', saveHint: 'Export a JSON file (save to Files or AirDrop it) and import it on another device to move your data.',
     importOk: 'Imported', importFail: 'Import failed: ', reset: '⚠️ Reset', resetAll: 'Erase everything (account and all kids)', resetConfirm: 'Tap again to confirm',
     about: 'ℹ️ About', aboutLine: 'Math Farm v{v} · family use · runs fully offline', checkUpdate: '🔄 Check for updates',
+    whichIs: 'Which one is {n}?', whichIsSpoken: 'Which one is the number {n}?', copyDigit: 'Copy the number {n}', copyDigitSpoken: 'Write the number {n}', listen: '🔊 Listen again',
+    tryAgainPick: 'Think again and pick once more 👆', tryAgainSpoken: 'Try again', thatIs: 'This is {n}', wellDone: 'Well done!', isThis: 'It is this one, {n}', littleIntro: 'Listen and pick the right number, or copy the number. +{n} 🪙 per correct answer; you get a second try.',
+    mathMode: '🧮 Math mode', modeAuto: 'By age (under 5: listen & pick / copy)', modeLittle: 'Listen & pick / copy', modeBig: 'Handwritten sums',
+    voice: '🗣️ Voice', voiceHint: 'Uses the built-in system voices. For a more natural voice: Settings › Accessibility › Spoken Content › Voices › download an “Enhanced” or “Premium” voice (e.g. Ava, Tingting), then pick it here. Siri voices are not available to web apps.',
+    voiceTest: 'Test', noVoices: 'No voice available for this language', speechRate: 'Speed', slow: 'Slow', normalRate: 'Medium', fast: 'Normal',
     sec: '{n} s', min: '{n} min', hour: '{n} h', hourMin: '{h} h {m} min', dayHour: '{d} d {h} h',
   },
 };
