@@ -239,7 +239,7 @@ button, input { font-family: inherit; color: inherit; }
    ===================================================================== */
 #app.theme-shop { background: linear-gradient(#FFF1D6, #FFE4C2); }
 .farm-layout { align-items: stretch; }
-.farm-board { flex: 1 1 auto; max-width: 680px; border-radius: 32px; overflow: hidden; background: #BFE39C; box-shadow: 0 8px 0 var(--shadow); display: flex; flex-direction: column; position: relative; }
+.farm-board { flex: 1 1 0%; min-width: 0; width: 100%; max-width: 680px; border-radius: 32px; overflow: hidden; background: #BFE39C; box-shadow: 0 8px 0 var(--shadow); display: flex; flex-direction: column; position: relative; }
 .farm-board .farm-sky { height: 80px; flex: 0 0 auto; }
 .farm-sky .bird { position: absolute; top: 30px; left: -40px; font-size: 22px; animation: fly 18s linear infinite; }
 .farm-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px 14px 8px; }
@@ -343,9 +343,19 @@ button, input { font-family: inherit; color: inherit; }
   .home-btn { flex: 1 1 30%; min-height: 60px; font-size: 16px; padding: 4px 8px; flex-direction: column; gap: 2px; }
   .home-btn .emoji { font-size: 26px; }
 }
-/* 农场板高度随内容，不拉伸 */
+/* 农场板高度随内容，不拉伸；宽度明确占满可用空间（Safari 需要） */
 .farm-layout { align-items: flex-start; }
-.farm-board { flex: 0 1 auto; }
+.farm-board { flex: 1 1 0%; }
+.farm-grid { width: 100%; }
+.home-side { flex: 0 0 auto; }
 .home-side { position: sticky; top: 0; }
 .home-btn span:last-child { white-space: nowrap; }
 @media (max-width: 520px) { .home-btn { font-size: 15px; } }
+/* iPad 竖屏：农场板放上面占满宽度，按钮一排在下面 */
+@media (orientation: portrait) and (max-width: 900px) {
+  .farm-layout { flex-direction: column; align-items: stretch; gap: 12px; }
+  .farm-board { max-width: none; width: 100%; }
+  .home-side { width: 100%; max-width: none; position: static; }
+  .home-menu { flex-direction: row; }
+  .home-btn { flex: 1 1 30%; }
+}
