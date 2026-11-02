@@ -67,11 +67,11 @@ export async function setup(ctx) {
   function renderWrite() {
     prompt.textContent = t('spellWriteHint', { n: q.word.w.length });
     boxes = [];
-    const row = h('div', { class: 'letter-boxes' });
+    const row = h('div', { class: 'letter-boxes', style: { '--n': q.word.w.length } });
     for (let i = 0; i < q.word.w.length; i++) {
       const recog = h('div', { class: 'recog small' }, '　');
       const hint = h('div', { class: 'letter-hint' }, '');
-      const b = ctx.makeBox(() => evaluate());
+      const b = ctx.makeBox(() => evaluate(), { letter: true });
       b.recog = recog; b.hint = hint;
       row.append(h('div', { class: 'letter-cell' }, recog, b.el, hint));
       boxes.push(b);

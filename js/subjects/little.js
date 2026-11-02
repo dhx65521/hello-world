@@ -83,7 +83,7 @@ export async function setup(ctx, kind) {
       st.busy = true;
       if (accepted) await right(box.el);
       else { await wrong(box.el); box.clear(); recog.textContent = '　'; }
-    });
+    }, { letter: isLetters });
     const clearBtn = button('🧹', () => { box.clear(); recog.textContent = '　'; ctx.audio.sfx('erase'); }, 'icon round clear-btn');
     area.append(h('div', { class: 'copy-row' }, modelCard, h('div', { class: 'arrow' }, '➡️'), h('div', { class: 'copy-pad' }, recog, h('div', { class: 'pad-row' }, box.el, clearBtn))));
     requestAnimationFrame(() => box.resize());

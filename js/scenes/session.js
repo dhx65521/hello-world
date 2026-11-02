@@ -41,9 +41,9 @@ export async function sessionScene({ subject = 'arith' } = {}) {
   let idleTimer = null;
 
   // ---------- 手写框工厂 ----------
-  function makeBox(onIdle) {
+  function makeBox(onIdle, { letter = false } = {}) {
     const canvas = h('canvas', { class: 'digit-canvas' });
-    const el = h('div', { class: 'digit-box' }, canvas);
+    const el = h('div', { class: 'digit-box' + (letter ? ' letter-box' : '') }, canvas);
     const ctx = canvas.getContext('2d');
     const strokes = [];
     let cur = null, size = 0;

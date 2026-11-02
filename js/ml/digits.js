@@ -60,9 +60,9 @@ function softmax(z) { const m = Math.max(...z); const e = z.map((v) => Math.exp(
 
 /** 输入 28x28 Float32Array（0..1，白字黑底），返回 { digit, label, prob, probs } */
 export function predict(img, m = models.digits) {
-  const hidden = m.f1b.data.length, nOut = m.f2b.data.length;
-  let x = conv3x3(img, 28, 28, 1, m.c1w.data, m.c1b.data, 16); x = pool2(x, 28, 28, 16);
-  x = conv3x3(x, 14, 14, 16, m.c2w.data, m.c2b.data, 32); x = pool2(x, 14, 14, 32);
+  const hidden = m.f1b.data.length, nOut = m.f2b.data.length, C1 = m.c1b.data.length, C2 = m.c2b.data.length;
+  let x = conv3x3(img, 28, 28, 1, m.c1w.data, m.c1b.data, C1); x = pool2(x, 28, 28, C1);
+  x = conv3x3(x, 14, 14, C1, m.c2w.data, m.c2b.data, C2); x = pool2(x, 14, 14, C2);
   x = dense(x, m.f1w.data, m.f1b.data, hidden, true);
   const logits = dense(x, m.f2w.data, m.f2b.data, nOut, false);
   const probs = softmax(Array.from(logits));
