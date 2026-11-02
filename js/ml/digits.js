@@ -1,19 +1,22 @@
 // 手写数字识别：小卷积网络（MNIST 训练，int8 量化），纯 JS 推理，离线可用。
 // 用法：await loadModel(); const { digit, prob } = recognize(strokes, boxSize)
-let model = null;
+const models = {};
 
 function dequant(t) {
   const bin = atob(t.data); const n = bin.length; const out = new Float32Array(n);
   for (let i = 0; i < n; i++) { let v = bin.charCodeAt(i); if (v > 127) v -= 256; out[i] = v * t.scale; }
   return { shape: t.shape, data: out };
 }
-export async function loadModel() {
-  if (model) return model;
-  const res = await fetch(new URL('./digits-model.json', import.meta.url));
+/** 加载模型：'digits'（0–9）或 'letters'（A–Z，大小写合并） */
+export async function loadModel(name = 'digits') {
+  if (models[name]) return models[name];
+  const res = await fetch(new URL(`./${name}-model.json`, import.meta.url));
   const j = await res.json();
-  model = {}; for (const [k, t] of Object.entries(j.tensors)) model[k] = dequant(t);
-  return model;
+  const m = { labels: j.labels || null }; for (const [k, t] of Object.entries(j.tensors)) m[k] = dequant(t);
+  models[name] = m;
+  return m;
 }
+export const loadLettersModel = () => loadModel('letters');
 
 // ---- 算子（NHWC，单张图） ----
 function conv3x3(x, H, W, Cin, w, b, Cout) {
@@ -55,16 +58,16 @@ function dense(x, w, b, nOut, relu) {
 }
 function softmax(z) { const m = Math.max(...z); const e = z.map((v) => Math.exp(v - m)); const s = e.reduce((a, b) => a + b, 0); return e.map((v) => v / s); }
 
-/** 输入 28x28 Float32Array（0..1，白字黑底），返回 { digit, prob, probs } */
-export function predict(img) {
-  const m = model;
+/** 输入 28x28 Float32Array（0..1，白字黑底），返回 { digit, label, prob, probs } */
+export function predict(img, m = models.digits) {
+  const hidden = m.f1b.data.length, nOut = m.f2b.data.length;
   let x = conv3x3(img, 28, 28, 1, m.c1w.data, m.c1b.data, 16); x = pool2(x, 28, 28, 16);
   x = conv3x3(x, 14, 14, 16, m.c2w.data, m.c2b.data, 32); x = pool2(x, 14, 14, 32);
-  x = dense(x, m.f1w.data, m.f1b.data, 64, true);
-  const logits = dense(x, m.f2w.data, m.f2b.data, 10, false);
+  x = dense(x, m.f1w.data, m.f1b.data, hidden, true);
+  const logits = dense(x, m.f2w.data, m.f2b.data, nOut, false);
   const probs = softmax(Array.from(logits));
-  let digit = 0; for (let i = 1; i < 10; i++) if (probs[i] > probs[digit]) digit = i;
-  return { digit, prob: probs[digit], probs };
+  let best = 0; for (let i = 1; i < nOut; i++) if (probs[i] > probs[best]) best = i;
+  return { digit: best, label: m.labels ? m.labels[best] : String(best), prob: probs[best], probs };
 }
 
 // ---- 预处理：把笔画渲染成 MNIST 风格的 28x28 ----
@@ -120,8 +123,9 @@ export function strokesToTensor(strokes, size) {
   return img;
 }
 
-export function recognize(strokes, size) {
+export function recognize(strokes, size, model = models.digits) {
   const t = strokesToTensor(strokes, size);
   if (!t) return null;
-  return predict(t);
+  return predict(t, model);
 }
+export const recognizeLetter = (strokes, size) => recognize(strokes, size, models.letters);

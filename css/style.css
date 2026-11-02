@@ -540,3 +540,52 @@ button, input { font-family: inherit; color: inherit; }
   .scene-body { overflow-y: auto; }
 }
 @media (max-width: 760px), (max-height: 520px) { .bottom-bar .home-btn span { white-space: normal; line-height: 1.1; text-align: center; } }
+
+/* ========== 学习训练中心 ========== */
+.subject-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: min(1000px, 100%); }
+.subject-card { width: 300px; min-height: 200px; border: none; border-radius: 30px; background: #fff; box-shadow: 0 8px 0 var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 18px; color: var(--ink); transition: transform .1s; }
+.subject-card:active { transform: translateY(5px); }
+.subject-card.dim { opacity: .7; }
+.subject-card .em { font-size: 64px; line-height: 1.1; }
+.subject-card .name { font-size: 28px; font-weight: 800; }
+.subject-card .desc { font-size: 15px; color: var(--ink-soft); text-align: center; }
+.subject-card .meta { font-size: 15px; color: var(--green-dark); font-weight: 700; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.subject-card .due { background: #FFF4CC; color: #A66; border-radius: 999px; padding: 1px 10px; }
+.num-card.letter { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; }
+.num-card.letter .low { font-size: 45%; color: var(--ink-soft); margin-top: 4px; }
+.num-card.correct.letter .low, .num-card.reveal.letter .low { color: #fff; }
+
+/* ========== 拼写 ========== */
+.spell-row { display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; flex-wrap: wrap; }
+.spell-pic { width: min(30vh, 260px); height: min(30vh, 260px); border: none; border-radius: 36px; background: #fff; box-shadow: 0 10px 0 var(--shadow), inset 0 0 0 5px #E6EDF4; font-size: min(20vh, 170px); line-height: 1; }
+.word-opts { display: flex; flex-direction: column; gap: 14px; }
+.word-opt { min-width: 260px; min-height: 84px; font-size: 40px; font-weight: 800; letter-spacing: 2px; border-radius: 28px; }
+.word-opt.tried { opacity: .35; }
+.word-opt.correct, .word-opt.reveal { background: var(--green); color: #fff; animation: pop .5s ease; }
+.spell-write { display: flex; align-items: flex-end; gap: 14px; }
+.letter-boxes { display: flex; gap: 10px; }
+.letter-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.letter-cell .digit-box { width: min(16vw, 24vh, 150px); border-radius: 20px; }
+.letter-cell .recog.small { font-size: 26px; min-height: 32px; }
+.letter-hint { min-height: 30px; font-size: 26px; font-weight: 800; color: var(--green-dark); opacity: 0; }
+.letter-hint.show { opacity: 1; }
+.little-area.spell { align-items: center; }
+
+/* ========== 家长：学习分析 ========== */
+.ana-kid { margin-bottom: 14px; }
+.ana-block { margin: 8px 0 12px; }
+.ana-head { font-weight: 800; font-size: 19px; }
+.ana-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.ana-item { background: #FFE3E3; border-radius: 999px; padding: 4px 12px; font-size: 16px; font-weight: 700; }
+.ana-item.ok { background: #E6F7E8; }
+.ana-item small { font-weight: 500; color: var(--ink-soft); }
+
+@media (max-width: 760px), (max-height: 520px) {
+  .subject-card { width: 200px; min-height: 140px; padding: 10px; } .subject-card .em { font-size: 40px; } .subject-card .name { font-size: 20px; } .subject-card .desc { font-size: 12px; }
+  .spell-pic { width: min(24vh, 150px); height: min(24vh, 150px); font-size: min(15vh, 90px); border-radius: 22px; }
+  .word-opts { gap: 8px; } .word-opt { min-width: 160px; min-height: 56px; font-size: 26px; }
+  .spell-row { gap: 14px; }
+  .letter-cell .digit-box { width: min(15vw, 22vh, 90px); border-radius: 14px; }
+  .letter-cell .recog.small { font-size: 18px; min-height: 22px; } .letter-hint { font-size: 18px; min-height: 22px; }
+}
+@media (max-height: 520px) { .spell-row.write { flex-wrap: nowrap; } .spell-pic { width: 110px; height: 110px; font-size: 70px; } }

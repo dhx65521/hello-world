@@ -9,6 +9,8 @@ import { APP_VERSION } from '../version.js';
 import { t, lang, setLang } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
 import * as speech from '../core/speech.js';
+import * as mistakes from '../core/mistakes.js';
+import { SUBJECTS } from './train.js';
 
 let unlockedUntil = 0;
 
@@ -53,10 +55,30 @@ export function parentScene() {
   wrap.append(kidsSec);
 
   wrap.append(seg(t('dailyLimit'), [[1, t('times', { n: 1 })], [2, t('times', { n: 2 })], [3, t('times', { n: 3 })], [5, t('times', { n: 5 })], [0, t('unlimited')]], () => limits.dailyLimit(), (v) => setSetting('dailyLimit', v), t('dailyHint')));
-  wrap.append(seg(t('mathMode'), [['auto', t('modeAuto')], ['little', t('modeLittle')], ['big', t('modeBig')]], () => setting('mathMode') || 'auto', (v) => setSetting('mathMode', v)));
+  wrap.append(seg(t('ageGroup'), [['auto', t('groupAuto')], ['little', t('groupLittle')], ['big', t('groupBig')]], () => setting('mathMode') || 'auto', (v) => setSetting('mathMode', v)));
   wrap.append(seg(t('roundLength'), [[180, t('minutes', { n: 3 })], [300, t('minutes', { n: 5 })], [480, t('minutes', { n: 8 })], [600, t('minutes', { n: 10 })]], () => setting('roundSeconds'), (v) => setSetting('roundSeconds', v)));
   wrap.append(seg(t('reward'), [[1, '+1'], [2, '+2'], [3, '+3']], () => setting('rewardCoins'), (v) => setSetting('rewardCoins', v), t('rewardHint')));
   wrap.append(seg(t('farmTime'), [[1, t('normal')], [10, t('faster', { n: 10 })], [60, t('faster', { n: 60 })], [600, t('faster', { n: 600 })]], () => setting('timeScale'), (v) => setSetting('timeScale', v), t('farmTimeHint')));
+
+  // 学习分析
+  const ana = h('section', {}, h('h2', {}, t('analytics')));
+  let any = false;
+  for (const kid of st.kids) {
+    const blocks = [];
+    for (const [id, m] of Object.entries(SUBJECTS)) {
+      const ss = kid.subjectStats?.[id]; const rep = mistakes.report(kid, id, 8);
+      if (!ss && !rep.total) continue;
+      any = true;
+      const acc = ss && ss.answered ? Math.round((ss.correct / ss.answered) * 100) + '%' : '—';
+      blocks.push(h('div', { class: 'ana-block' },
+        h('div', { class: 'ana-head' }, `${m.icon} ${t(m.name)}`, h('span', { class: 'hint' }, ss ? ` · ${ss.rounds} ${t('rounds')} · ${t('acc')} ${acc}` : ''), h('span', { class: 'hint' }, ` · ${t('mastered', { n: rep.mastered })} · ${t('stillDue', { n: rep.due })}`)),
+        rep.top.length ? h('div', { class: 'ana-list' }, ...rep.top.map((e) => h('span', { class: 'ana-item' + (e.streak >= mistakes.MASTER_STREAK ? ' ok' : '') }, e.label, h('small', {}, ` ${t('wrongTimes', { n: e.w })} · ${t('streakOf', { n: e.streak })}`)))) : h('div', { class: 'hint' }, t('noData')),
+      ));
+    }
+    if (blocks.length) ana.append(h('div', { class: 'ana-kid' }, h('div', { class: 'kid-row-name' }, `${kid.name}`), ...blocks));
+  }
+  if (!any) ana.append(h('div', { class: 'hint' }, t('noData')));
+  wrap.append(ana);
 
   // 语音
   const voiceSec = h('section', {}, h('h2', {}, t('voice')));

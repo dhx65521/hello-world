@@ -1,5 +1,5 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = '24ebda3eeb';
+self.__VERSION = 'd955f653d7';
 self.__ASSETS = [
   "./",
   "./css/style.css",
@@ -7,6 +7,7 @@ self.__ASSETS = [
   "./data/factory.json",
   "./data/farm.json",
   "./data/math.json",
+  "./data/spelling.json",
   "./icons/apple-touch-icon-180.png",
   "./icons/icon-192.png",
   "./icons/icon-512-maskable.png",
@@ -22,6 +23,7 @@ self.__ASSETS = [
   "./js/core/i18n.js",
   "./js/core/iso.js",
   "./js/core/limits.js",
+  "./js/core/mistakes.js",
   "./js/core/plants.js",
   "./js/core/room.js",
   "./js/core/router.js",
@@ -31,15 +33,20 @@ self.__ASSETS = [
   "./js/core/widgets.js",
   "./js/ml/digits-model.json",
   "./js/ml/digits.js",
+  "./js/ml/letters-model.json",
   "./js/scenes/bag.js",
   "./js/scenes/factory.js",
   "./js/scenes/home.js",
   "./js/scenes/kids.js",
-  "./js/scenes/math.js",
   "./js/scenes/parent.js",
   "./js/scenes/roomscene.js",
+  "./js/scenes/session.js",
   "./js/scenes/setup.js",
   "./js/scenes/shop.js",
+  "./js/scenes/train.js",
+  "./js/subjects/arith.js",
+  "./js/subjects/little.js",
+  "./js/subjects/spelling.js",
   "./js/version.js",
   "./manifest.webmanifest"
 ];

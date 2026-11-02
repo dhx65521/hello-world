@@ -9,6 +9,8 @@
   "bigRatio": 0.6,
   "idleMs": 1500,
   "minConfidence": 0.55,
+  "letterTolerance": 0.25,
+  "reviewRatio": 0.4,
   "wrongShowAnswerMs": 1800,
   "little": {
     "_说明": "5 岁以下的玩法：听题选卡片 + 照着写数字。max 是最大数字，cards 是选项数。",
