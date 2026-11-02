@@ -71,8 +71,7 @@ export async function homeScene() {
       { label: t('tomorrow'), cls: 'primary' }] });
   }
   const panel = h('div', { class: 'plot-panel' });
-  ui.body.classList.add('scrollable');
-  ui.body.append(h('div', { class: 'home-layout farm-layout' }, h('div', { class: 'home-left' }, board), h('div', { class: 'home-side' }, menu, panel)));
+    ui.body.append(h('div', { class: 'home-layout stack' }, h('div', { class: 'home-left' }, board), h('div', { class: 'bottom-bar' }, menu, panel)));
 
   // ---------- 状态 ----------
   let selected = null;          // 选中的地块序号

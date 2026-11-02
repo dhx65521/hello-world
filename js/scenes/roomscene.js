@@ -33,8 +33,7 @@ export async function roomScene() {
     button([h('span', { class: 'emoji' }, '🪑'), h('span', {}, t('placeShort'))], () => openPlacePicker(), 'home-btn'),
   );
   const panel = h('div', { class: 'plot-panel' });
-  ui.body.classList.add('scrollable');
-  ui.body.append(h('div', { class: 'home-layout farm-layout' }, h('div', { class: 'home-left' }, roomWrap), h('div', { class: 'home-side' }, menu, panel)));
+    ui.body.append(h('div', { class: 'home-layout stack' }, h('div', { class: 'home-left' }, roomWrap), h('div', { class: 'bottom-bar' }, menu, panel)));
 
   let selFurn = null, moving = false, selected = null;
   const inv = () => currentKid().inventory;
