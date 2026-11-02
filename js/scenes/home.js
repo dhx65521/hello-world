@@ -218,7 +218,8 @@ export async function homeScene() {
     }
   }
   let timer = setInterval(() => { if (!document.hidden) tickAll(); }, 1000);
-  const stop = () => { clearInterval(timer); timer = null; };
+  const stopAnimals = FI.animateAnimals(() => field.querySelector('svg'));
+  const stop = () => { clearInterval(timer); timer = null; stopAnimals(); };
   tickAll(true);
   renderAll();
 }

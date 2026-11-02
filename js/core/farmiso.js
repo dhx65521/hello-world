@@ -36,8 +36,9 @@ export function renderFarm(plotsInfo, { selected = null } = {}) {
   // 点缀：小树、牌子、水桶
   s += emojiAt(proj(-m + 0.1, ROWS + m - 0.3, 30), '🌳', 44);
   s += emojiAt(proj(COLS + m - 0.2, -m + 0.3, 34), '🪧', 30);
-  s += emojiAt(proj(COLS + m - 0.15, ROWS + m - 0.25, 12), '🪣', 24);
+  s += emojiAt(proj(-m + 0.15, ROWS + m - 0.05, 14), '🪣', 22);
 
+  s += animalsLayer(true);
   // 地块（按深度从后往前）
   const order = []; for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) order.push({ x, y, i: y * COLS + x });
   order.sort((a, b) => (a.x + a.y) - (b.x + b.y));
@@ -64,6 +65,7 @@ export function renderFarm(plotsInfo, { selected = null } = {}) {
     const [bx, by] = proj(x + 1.0, y + 0.0, SOIL_H + 30);
     if (p) badges.push({ i, bx, by, info, p });
   }
+  s += animalsLayer(false);
   for (const { i, bx, by, info, p } of badges) {
     s += `<g class="badge-iso" data-badge="${i}">`;
     if (info.ripe) s += `<circle cx="${bx}" cy="${by}" r="10" fill="#FFF4CC" stroke="#FFD93D" stroke-width="1.5" class="pulse"/>` + emojiAt([bx, by], '✨', 11);
@@ -93,3 +95,62 @@ export function plotCenter(i) { const x = i % COLS, y = Math.floor(i / COLS); re
 export const waterFx = (i) => { const [cx, cy] = plotCenter(i); return emojiAt([cx + 18, cy - 54], '🚿', 26, 'class="fx-can"') + [0, 1, 2, 3, 4].map((k) => emojiAt([cx - 22 + k * 11, cy - 40], '💧', 12, `class="fx-drop" style="animation-delay:${k * 0.08}s"`)).join(''); };
 export const sprayFx = (i) => { const [cx, cy] = plotCenter(i); return emojiAt([cx - 20, cy - 50], '🧴', 24, 'class="fx-can"') + emojiAt([cx, cy - 30], '💨', 20, 'class="fx-drop"'); };
 export const seedFx = (i) => { const [cx, cy] = plotCenter(i); return emojiAt([cx, cy - 50], '🌰', 18, 'class="fx-seed"'); };
+
+// ---------- 小动物：沿着田边来回走 ----------
+const ANIMALS = [
+  { id: 'chicken', e: '🐔', lane: 'front', speed: 0.28, size: 22, t: 0.1 },
+  { id: 'dog', e: '🐕', lane: 'front', speed: 0.45, size: 24, t: 0.7 },
+  { id: 'rabbit', e: '🐇', lane: 'left', speed: 0.38, size: 20, t: 0.3 },
+  { id: 'pig', e: '🐖', lane: 'left', speed: 0.16, size: 24, t: 0.8 },
+  { id: 'sheep', e: '🐑', lane: 'back', speed: 0.18, size: 24, t: 0.2 },
+  { id: 'cat', e: '🐈', lane: 'back', speed: 0.32, size: 20, t: 0.65 },
+  { id: 'duck', e: '🦆', lane: 'right', speed: 0.24, size: 20, t: 0.4 },
+  { id: 'cow', e: '🐄', lane: 'right', speed: 0.12, size: 26, t: 0.9 },
+];
+const LANES = {
+  front: { from: [-0.35, 2.32], to: [4.35, 2.32] },
+  back: { from: [-0.35, -0.36], to: [4.35, -0.36] },
+  left: { from: [-0.38, -0.25], to: [-0.38, 2.3] },
+  right: { from: [4.38, -0.25], to: [4.38, 2.3] },
+};
+const state = {}; // 跨重绘保留位置
+for (const a of ANIMALS) state[a.id] = { t: a.t, dir: 1, pauseUntil: 0 };
+const lanePos = (lane, t) => { const l = LANES[lane]; return [l.from[0] + (l.to[0] - l.from[0]) * t, l.from[1] + (l.to[1] - l.from[1]) * t]; };
+
+/** 动物图层：back=true 画在地块后面（后排、左侧），否则画在前面 */
+export function animalsLayer(back) {
+  let s = '';
+  for (const a of ANIMALS) {
+    const isBack = a.lane === 'back' || a.lane === 'left';
+    if (isBack !== back) continue;
+    const [x, y] = lanePos(a.lane, state[a.id].t); const [px, py] = proj(x, y, 0);
+    s += `<g class="animal" data-animal="${a.id}" transform="translate(${px.toFixed(1)} ${py.toFixed(1)})"><ellipse cx="0" cy="2" rx="${a.size * 0.45}" ry="${a.size * 0.16}" fill="rgba(0,0,0,.12)"/><g class="walker"><text font-size="${a.size}" text-anchor="middle" dominant-baseline="auto" y="-2">${a.e}</text></g></g>`;
+  }
+  return s;
+}
+/** 启动走动动画；返回 stop() */
+export function animateAnimals(getSvg) {
+  let raf = 0, last = performance.now();
+  const tick = (now) => {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const svg = getSvg();
+    for (const a of ANIMALS) {
+      const st = state[a.id];
+      if (now < st.pauseUntil) continue;
+      const lane = LANES[a.lane]; const len = Math.hypot(lane.to[0] - lane.from[0], lane.to[1] - lane.from[1]);
+      st.t += st.dir * a.speed * dt / len;
+      if (st.t >= 1 || st.t <= 0) { st.t = Math.max(0, Math.min(1, st.t)); st.dir *= -1; st.pauseUntil = now + 800 + Math.random() * 2500; }
+      else if (Math.random() < 0.002) st.pauseUntil = now + 500 + Math.random() * 1500; // 偶尔停下吃草
+      if (!svg) continue;
+      const g = svg.querySelector(`.animal[data-animal="${a.id}"]`); if (!g) continue;
+      const [x, y] = lanePos(a.lane, st.t); const [px, py] = proj(x, y, 0);
+      // 沿 x 走：向右(+x)时翻面；沿 y 走：向 -y（屏幕右上）时翻面
+      const flip = a.lane === 'front' || a.lane === 'back' ? st.dir > 0 : st.dir < 0;
+      g.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)})`);
+      g.querySelector('.walker').setAttribute('transform', flip ? 'scale(-1 1)' : '');
+    }
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  return () => cancelAnimationFrame(raf);
+}
