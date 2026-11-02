@@ -2,6 +2,9 @@
 import { randInt, shuffle, loadJSON } from '../core/ui.js';
 
 let data = null;
+// 孩子常写混的形近字母组：整词大体正确时，这些替换可以接受
+const CONFUSE = ['aqodg', 'iljtf', 'uvyw', 'nhmr', 'ceo', 'bdp', 'kx', 'sz', 'gyq', 'mw', 'ft'];
+const confusable = (a, b) => a !== b && CONFUSE.some((g) => g.includes(a) && g.includes(b));
 export async function setup(ctx) {
   const { h, button, t, rules, st, speech } = ctx;
   data = data || await loadJSON(new URL('../../data/spelling.json', import.meta.url));
@@ -62,12 +65,12 @@ export async function setup(ctx) {
       });
       opts.append(b);
     }
-    area.append(h('div', { class: 'spell-row' }, picture(), opts));
+    area.append(h('div', { class: 'spell-row pick' }, picture(), opts));
   }
   function renderWrite() {
     prompt.textContent = t('spellWriteHint', { n: q.word.w.length });
     boxes = [];
-    const row = h('div', { class: 'letter-boxes', style: { '--n': q.word.w.length } });
+    const row = h('div', { class: 'letter-boxes' });
     for (let i = 0; i < q.word.w.length; i++) {
       const recog = h('div', { class: 'recog small' }, '　');
       const hint = h('div', { class: 'letter-hint' }, '');
@@ -77,7 +80,7 @@ export async function setup(ctx) {
       boxes.push(b);
     }
     const clearBtn = button('🧹', () => { boxes.forEach((b) => { b.clear(); b.recog.textContent = '　'; }); ctx.audio.sfx('erase'); }, 'icon round clear-btn');
-    area.append(h('div', { class: 'spell-row write' }, picture(), h('div', { class: 'spell-write' }, row, clearBtn)));
+    area.append(h('div', { class: 'spell-row write', style: { '--n': q.word.w.length } }, picture(), h('div', { class: 'spell-write' }, row, clearBtn)));
     requestAnimationFrame(() => boxes.forEach((b) => b.resize()));
   }
   async function evaluate() {
@@ -85,11 +88,21 @@ export async function setup(ctx) {
     const reads = boxes.map((b) => ctx.readBox(b, 'letters'));
     reads.forEach((r, i) => { boxes[i].recog.textContent = r ? r.label.toLowerCase() : '　'; boxes[i].recog.classList.toggle('warn', !!(r && r.lowConf)); });
     if (reads.some((r) => !r)) return; // 还没写完
-    const accept = (r, ch) => r.label.toLowerCase() === ch || r.probOf(ch) >= (rules.letterTolerance ?? 0.25); // 容忍 i/l 这类形近字母
-    const unclear = reads.map((r, i) => (r.lowConf && !accept(r, q.word.w[i])) ? i : -1).filter((i) => i >= 0);
+    // 整词判定：孩子不会写出 bqll 这种词。先看每个字母“明显对”还是“勉强像”，
+    // 只要大部分字母明显对、其余字母也在识别候选的前几名里，就算整词正确。
+    const w = q.word.w, n = w.length;
+    const strict = reads.map((r, i) => r.label.toLowerCase() === w[i]);
+    const soft = reads.map((r, i) => strict[i] || r.probOf(w[i]) >= (rules.letterSoft ?? 0.06) || r.rankOf(w[i]) <= (rules.letterRank ?? 3) || confusable(w[i], r.label.toLowerCase()));
+    // “基本对”的字母：识别为期望字母，或期望字母概率不低（如 l 被认成 I 但 L 有 0.4）
+    const near = reads.map((r, i) => strict[i] || r.probOf(w[i]) >= (rules.letterNear ?? 0.3));
+    const nearCount = near.filter(Boolean).length;
+    const wordOk = soft.every(Boolean) && nearCount >= Math.ceil(n / 2);
+    const accept = (r, ch, i) => wordOk || strict[i] || r.probOf(ch) >= (rules.letterTolerance ?? 0.25);
+    const unclear = reads.map((r, i) => (r.lowConf && !accept(r, w[i], i)) ? i : -1).filter((i) => i >= 0);
     if (unclear.length) { ctx.audio.sfx('pop'); feedback.textContent = t('unclearLetters'); feedback.className = 'q-feedback bad'; unclear.forEach((i) => { ctx.shake(boxes[i].el); boxes[i].clear(); boxes[i].recog.textContent = '　'; }); return; }
     st.busy = true;
-    const wrongIdx = reads.map((r, i) => accept(r, q.word.w[i]) ? -1 : i).filter((i) => i >= 0);
+    if (wordOk) reads.forEach((r, i) => { boxes[i].recog.textContent = w[i]; });
+    const wrongIdx = reads.map((r, i) => accept(r, w[i], i) ? -1 : i).filter((i) => i >= 0);
     if (!wrongIdx.length) return right(area.querySelector('.spell-write'));
     const els = wrongIdx.map((i) => boxes[i].el);
     await wrong(els, 'spellTryAgain');

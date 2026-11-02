@@ -76,7 +76,7 @@ const off = typeof document !== 'undefined' ? document.createElement('canvas') :
  * strokes: [[{x,y}, ...], ...]，坐标在 0..size 的正方形内
  * 步骤：按 MNIST 规范——裁出墨迹包围盒，等比缩到 20x20 以内，按质心放到 28x28 中央
  */
-export function strokesToTensor(strokes, size) {
+export function strokesToTensor(strokes, size, fit = 20) {
   const S = 256; off.width = S; off.height = S;
   const ctx = off.getContext('2d');
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, S, S);
@@ -97,8 +97,8 @@ export function strokesToTensor(strokes, size) {
   const pad = ctx.lineWidth / 2 + 1;
   minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad); maxX = Math.min(S, maxX + pad); maxY = Math.min(S, maxY + pad);
   const bw = Math.max(1, maxX - minX), bh = Math.max(1, maxY - minY);
-  // 缩放到 20x20 盒子里
-  const scale = 20 / Math.max(bw, bh);
+  // 缩放到 fit×fit 盒子里（默认 20，和 MNIST 一致）
+  const scale = fit / Math.max(bw, bh);
   const tw = Math.max(1, Math.round(bw * scale)), th = Math.max(1, Math.round(bh * scale));
   const c2 = document.createElement('canvas'); c2.width = 28; c2.height = 28;
   const g = c2.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, 28, 28);
@@ -123,9 +123,18 @@ export function strokesToTensor(strokes, size) {
   return img;
 }
 
-export function recognize(strokes, size, model = models.digits) {
-  const t = strokesToTensor(strokes, size);
-  if (!t) return null;
-  return predict(t, model);
+/** 识别：多尺度（18/20/22）平均概率，更稳 */
+export function recognize(strokes, size, model = models.digits, { tta = true } = {}) {
+  const fits = tta ? [18, 20, 22] : [20];
+  let acc = null, n = 0;
+  for (const f of fits) {
+    const t = strokesToTensor(strokes, size, f); if (!t) return null;
+    const r = predict(t, model);
+    if (!acc) acc = r.probs.slice(); else r.probs.forEach((v, i) => { acc[i] += v; });
+    n++;
+  }
+  const probs = acc.map((v) => v / n);
+  let best = 0; for (let i = 1; i < probs.length; i++) if (probs[i] > probs[best]) best = i;
+  return { digit: best, label: model.labels ? model.labels[best] : String(best), prob: probs[best], probs };
 }
 export const recognizeLetter = (strokes, size) => recognize(strokes, size, models.letters);
