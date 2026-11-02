@@ -1,0 +1,25 @@
+{
+  "_说明": "单词拼写。每个词：w 单词，zh 中文，emoji 图片。先用生活常用的单音节词和动词。maxLen 控制手写模式最长的词。",
+  "maxLen": 5,
+  "writeRatio": 0.5,
+  "words": [
+    {"w":"cat","zh":"猫","emoji":"🐱"},{"w":"dog","zh":"狗","emoji":"🐶"},{"w":"pig","zh":"猪","emoji":"🐷"},{"w":"cow","zh":"牛","emoji":"🐮"},
+    {"w":"duck","zh":"鸭子","emoji":"🦆"},{"w":"fish","zh":"鱼","emoji":"🐟"},{"w":"frog","zh":"青蛙","emoji":"🐸"},{"w":"bird","zh":"鸟","emoji":"🐦"},
+    {"w":"bee","zh":"蜜蜂","emoji":"🐝"},{"w":"ant","zh":"蚂蚁","emoji":"🐜"},{"w":"bear","zh":"熊","emoji":"🐻"},{"w":"lion","zh":"狮子","emoji":"🦁"},
+    {"w":"sun","zh":"太阳","emoji":"☀️"},{"w":"moon","zh":"月亮","emoji":"🌙"},{"w":"star","zh":"星星","emoji":"⭐"},{"w":"rain","zh":"雨","emoji":"🌧️"},
+    {"w":"snow","zh":"雪","emoji":"❄️"},{"w":"tree","zh":"树","emoji":"🌳"},{"w":"leaf","zh":"叶子","emoji":"🍃"},{"w":"rose","zh":"玫瑰","emoji":"🌹"},
+    {"w":"book","zh":"书","emoji":"📖"},{"w":"pen","zh":"笔","emoji":"🖊️"},{"w":"bag","zh":"书包","emoji":"🎒"},{"w":"cup","zh":"杯子","emoji":"🥤"},
+    {"w":"hat","zh":"帽子","emoji":"🎩"},{"w":"bed","zh":"床","emoji":"🛏️"},{"w":"box","zh":"盒子","emoji":"📦"},{"w":"key","zh":"钥匙","emoji":"🔑"},
+    {"w":"ball","zh":"球","emoji":"⚽"},{"w":"kite","zh":"风筝","emoji":"🪁"},{"w":"bell","zh":"铃铛","emoji":"🔔"},{"w":"drum","zh":"鼓","emoji":"🥁"},
+    {"w":"car","zh":"汽车","emoji":"🚗"},{"w":"bus","zh":"公交车","emoji":"🚌"},{"w":"bike","zh":"自行车","emoji":"🚲"},{"w":"boat","zh":"船","emoji":"⛵"},
+    {"w":"egg","zh":"鸡蛋","emoji":"🥚"},{"w":"milk","zh":"牛奶","emoji":"🥛"},{"w":"cake","zh":"蛋糕","emoji":"🍰"},{"w":"jam","zh":"果酱","emoji":"🫙"},
+    {"w":"corn","zh":"玉米","emoji":"🌽"},{"w":"rice","zh":"米饭","emoji":"🍚"},{"w":"pear","zh":"梨","emoji":"🍐"},{"w":"nut","zh":"坚果","emoji":"🥜"},
+    {"w":"hand","zh":"手","emoji":"✋"},{"w":"foot","zh":"脚","emoji":"🦶"},{"w":"nose","zh":"鼻子","emoji":"👃"},{"w":"eye","zh":"眼睛","emoji":"👁️"},
+    {"w":"ear","zh":"耳朵","emoji":"👂"},{"w":"lip","zh":"嘴唇","emoji":"👄"},{"w":"red","zh":"红色","emoji":"🔴"},{"w":"blue","zh":"蓝色","emoji":"🔵"},
+    {"w":"run","zh":"跑","emoji":"🏃"},{"w":"jump","zh":"跳","emoji":"🤸"},{"w":"swim","zh":"游泳","emoji":"🏊"},{"w":"eat","zh":"吃","emoji":"🍽️"},
+    {"w":"read","zh":"读书","emoji":"📚"},{"w":"sing","zh":"唱歌","emoji":"🎤"},{"w":"hop","zh":"单脚跳","emoji":"🐇"},{"w":"catch","zh":"接住","emoji":"🥎"},
+    {"w":"kick","zh":"踢","emoji":"🦵"},{"w":"cook","zh":"做饭","emoji":"👩‍🍳"},{"w":"wash","zh":"洗","emoji":"🧼"},{"w":"sleep","zh":"睡觉","emoji":"😴"},
+    {"w":"draw","zh":"画画","emoji":"🎨"},{"w":"walk","zh":"走路","emoji":"🚶"},{"w":"ride","zh":"骑","emoji":"🚴"},{"w":"hug","zh":"拥抱","emoji":"🤗"},
+    {"w":"clap","zh":"拍手","emoji":"👏"},{"w":"cry","zh":"哭","emoji":"😢"},{"w":"sit","zh":"坐","emoji":"🪑"},{"w":"dig","zh":"挖","emoji":"⛏️"}
+  ]
+}

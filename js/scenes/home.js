@@ -52,24 +52,15 @@ export async function homeScene() {
 
   // ---------- 右侧 ----------
   const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, t('bag'))], () => { stop(); go('bag'); }, 'home-btn');
-  const left = limits.remaining('math');
-  const mathSub = left === Infinity ? null : h('small', { class: 'sub' }, left > 0 ? t('leftToday', { n: left }) : t('noneLeftToday'));
   const ready = readyCount(currentKid());
   const factoryBtn = button([h('span', { class: 'emoji' }, '🏭'), h('span', {}, t('factory')), ready ? h('span', { class: 'dot' }, String(ready)) : null], () => { stop(); go('factory'); }, 'home-btn');
   const menu = h('div', { class: 'home-menu' },
-    button([h('span', { class: 'emoji' }, '🧮'), h('span', { class: 'lbl' }, h('span', {}, t('doMath')), mathSub)], () => startMath(), 'home-btn primary' + (left === 0 ? ' dim' : '')),
+    button([h('span', { class: 'emoji' }, '🎓'), h('span', {}, t('learn'))], () => { stop(); go('train'); }, 'home-btn primary'),
     button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shopName'))], () => { stop(); go('shop'); }, 'home-btn'),
     factoryBtn,
     bagBtn,
     button([h('span', { class: 'emoji' }, '🛏️'), h('span', {}, t('room'))], () => { stop(); go('room'); }, 'home-btn'),
   );
-  function startMath() {
-    if (limits.remaining('math') > 0) { stop(); return go('math'); }
-    audio.sfx('wrong');
-    dialog({ emoji: '🌙', title: t('dailyUsedUp'), body: h('div', { class: 'hint' }, t('dailyUsedUpHint', { n: limits.dailyLimit() })), buttons: [
-      { label: t('parentUnlock'), cls: 'soft', onClick: () => requirePin(() => { limits.grantBonus(1); toast(t('unlockedRound')); stop(); go('math'); }, t('unlockOnce')) },
-      { label: t('tomorrow'), cls: 'primary' }] });
-  }
   const panel = h('div', { class: 'plot-panel' });
     ui.body.append(h('div', { class: 'home-layout stack' }, h('div', { class: 'home-left' }, board), h('div', { class: 'bottom-bar' }, menu, panel)));
 

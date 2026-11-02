@@ -67,6 +67,14 @@ const DICT = {
     shopName: '杂货店', tabDecor: '🛏️ 家具', tabSellAll: '🧺 卖东西', products: '🍰 成品', noProducts: '还没有成品，去加工厂做一些吧。', decorOwned: '已拥有', decorBought: '已买到，去房间里摆上吧！', sheetBought: '已买到，点床就能换上！',
     // 房间
     room: '我的房间', farmPage: '回农场', placeShort: '摆家具', haveToPlace: '背包里有 {n} 件家具可以摆', roomHint: '点家具可以旋转、挪动；点地砖把它放过去', place: '🪑 摆家具', rotate: '⟳ 旋转', move: '👉 点地砖挪过去', putAway: '🎒 收起来', changeSheet: '🛏️ 换床单', noSpace: '那里放不下', nothingToPlace: '还没有新家具，去杂货店看看吧', pickSheet: '选一款床单', plainSheet: '白床单', hangWhere: '挂在哪面墙？', leftWall: '左边墙', rightWall: '右边墙', wallFull: '墙上挂满了', placedToast: '摆好了！', putAwayToast: '收进仓库了', furnitureSec: '🛏️ 家具',
+    // 训练中心
+    learn: '学习', trainTitle: '🎓 学习训练', trainHint: '选一个科目，每局 {m} 分钟', subjDigits: '认数字', subjLetters: '认字母', subjArith: '算术', subjSpelling: '单词拼写',
+    subjDigitsDesc: '听一听选数字，照着写数字', subjLettersDesc: '听一听选字母，照着写字母', subjArithDesc: '24 以内加减法，手写答案', subjSpellingDesc: '看图听音，选单词或一格一格写',
+    reviewDue: '{n} 道要复习', usedUp: '今天用完了', ageGroup: '🎓 训练科目分组', groupAuto: '按年龄', groupLittle: '5 岁以下', groupBig: '5 岁以上',
+    whichIsHidden: '👂 哪个是？', whichLetterSpoken: '下面哪个是字母 {n}？', copyLetter: '照着写 {n}', copyLetterSpoken: '照着写字母 {n}', isThisLetter: '是这个，{n}', thatIsLetter: '这个是 {n}', letterSpoken: '字母 {n}',
+    spellPrompt: '👂 这个单词怎么拼？', spellPick: '选一选', spellWrite: '一格写一个字母', spellWriteHint: '{n} 个字母', spellAnswer: '是 {w}', spellTryAgain: '有的字母不对，再写一次 ✏️', spellSpokenZh: '{zh}',
+    spellIntro: '看图片、听单词，选出正确的拼写，或者一格写一个字母。答对一题 +{n} 🪙，答错可以再来一次。',
+    analytics: '📊 学习分析', noData: '还没有记录', acc: '正确率', missedTop: '常错的题', mastered: '已掌握 {n}', stillDue: '待复习 {n}', wrongTimes: '错 {n} 次', streakOf: '连对 {n}',
     // 时间
     sec: '{n} 秒', min: '{n} 分钟', hour: '{n} 小时', hourMin: '{h} 小时 {m} 分', dayHour: '{d} 天 {h} 小时',
   },
@@ -122,6 +130,13 @@ const DICT = {
     make: '🍳 Make', needMore: 'Not enough ingredients', noSlot: 'Both slots are busy', inputsLine: 'Needs', sellsFor: 'Sells 🪙 {n}', takes: '⏱ {time}', haveN: 'have {n}', producedToast: '{name} is ready, put in your backpack 🎒', startedToast: 'Started making {name}',
     shopName: 'General Store', tabDecor: '🛏️ Furniture', tabSellAll: '🧺 Sell', products: '🍰 Products', noProducts: 'No products yet. Make some at the factory.', decorOwned: 'Owned', decorBought: 'Bought! Place it in your room.', sheetBought: 'Bought! Tap the bed to change sheets.',
     room: 'My Room', farmPage: 'Back to farm', placeShort: 'Place furniture', haveToPlace: '{n} item(s) in your backpack to place', roomHint: 'Tap furniture to rotate or move it; tap a floor tile to move it there', place: '🪑 Place furniture', rotate: '⟳ Rotate', move: '👉 Tap a tile to move', putAway: '🎒 Put away', changeSheet: '🛏️ Change sheets', noSpace: "It doesn't fit there", nothingToPlace: 'No new furniture yet. Visit the store!', pickSheet: 'Pick sheets', plainSheet: 'Plain sheets', hangWhere: 'Which wall?', leftWall: 'Left wall', rightWall: 'Right wall', wallFull: 'The wall is full', placedToast: 'Placed!', putAwayToast: 'Put in your backpack', furnitureSec: '🛏️ Furniture',
+    learn: 'Learn', trainTitle: '🎓 Learning', trainHint: 'Pick a subject. Each round is {m} minutes', subjDigits: 'Numbers', subjLetters: 'Letters', subjArith: 'Math', subjSpelling: 'Spelling',
+    subjDigitsDesc: 'Listen & pick a number, copy numbers', subjLettersDesc: 'Listen & pick a letter, copy letters', subjArithDesc: 'Add & subtract within 24, handwritten', subjSpellingDesc: 'See a picture, hear the word, pick or write it',
+    reviewDue: '{n} to review', usedUp: 'Used up today', ageGroup: '🎓 Subject group', groupAuto: 'By age', groupLittle: 'Under 5', groupBig: '5 and up',
+    whichIsHidden: '👂 Which one?', whichLetterSpoken: 'Which one is the letter {n}?', copyLetter: 'Copy {n}', copyLetterSpoken: 'Write the letter {n}', isThisLetter: 'It is this one, {n}', thatIsLetter: 'This is {n}', letterSpoken: 'The letter {n}',
+    spellPrompt: '👂 How do you spell it?', spellPick: 'Pick one', spellWrite: 'One letter per box', spellWriteHint: '{n} letters', spellAnswer: 'It is {w}', spellTryAgain: 'Some letters are wrong, try again ✏️', spellSpokenZh: '{zh}',
+    spellIntro: 'Look at the picture, listen to the word, then pick the spelling or write one letter per box. +{n} 🪙 per correct answer; you get a second try.',
+    analytics: '📊 Learning report', noData: 'No records yet', acc: 'Accuracy', missedTop: 'Most missed', mastered: 'Mastered {n}', stillDue: 'To review {n}', wrongTimes: 'wrong ×{n}', streakOf: 'streak {n}',
     sec: '{n} s', min: '{n} min', hour: '{n} h', hourMin: '{h} h {m} min', dayHour: '{d} d {h} h',
   },
 };
