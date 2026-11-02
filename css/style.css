@@ -589,3 +589,35 @@ button, input { font-family: inherit; color: inherit; }
   .letter-cell .recog.small { font-size: 18px; min-height: 22px; } .letter-hint { font-size: 18px; min-height: 22px; }
 }
 @media (max-height: 520px) { .spell-row.write { flex-wrap: nowrap; } .spell-pic { width: 110px; height: 110px; font-size: 70px; } }
+
+/* ========== 手写格：更大 + 字母三等分线 ========== */
+.digit-box.letter-box::before { left: 8%; right: 8%; top: 33.3%; bottom: auto; border-left: none; border-top: 2px dashed #CFD8E3; }
+.digit-box.letter-box::after { top: 66.6%; left: 8%; right: 8%; border-top: 2px dashed #CFD8E3; }
+/* 照着写：示范卡和手写格一样大、上下对齐 */
+.copy-row { gap: clamp(16px, 3vw, 40px); }
+.copy-row .num-card.model { width: min(36vw, 58vh, 460px); }
+.copy-pad { position: relative; }
+.copy-pad .recog { position: absolute; top: -52px; left: 0; right: 0; text-align: center; }
+.copy-pad .digit-box { width: min(36vw, 58vh, 460px); }
+/* 拼写：格子按字母数均分宽度，和图片居中对齐 */
+.spell-row.write { gap: clamp(14px, 2.5vw, 36px); flex-wrap: nowrap; }
+.spell-row.write .spell-pic { width: min(22vw, 50vh, 340px); height: min(22vw, 50vh, 340px); font-size: min(14vw, 32vh, 220px); flex: 0 0 auto; }
+.spell-write { align-items: center; gap: 10px; }
+.letter-boxes { gap: clamp(6px, 1vw, 14px); }
+.letter-cell .digit-box { width: min(calc((100vw - 34vw - 160px) / var(--n, 4)), 50vh, 340px); }
+.letter-cell .recog.small { font-size: 30px; min-height: 36px; }
+.letter-hint { min-height: 34px; font-size: 30px; }
+.little-area { padding: 6px 0; }
+.num-card { width: min(26%, 52vh, 360px); }
+@media (max-width: 760px), (max-height: 520px) {
+  .copy-row .num-card.model, .copy-pad .digit-box { width: min(34vw, 48vh); }
+  .copy-pad .recog { top: -34px; }
+  .spell-row.write .spell-pic { width: min(20vw, 40vh, 150px); height: min(20vw, 40vh, 150px); font-size: min(12vw, 24vh, 90px); }
+  .letter-cell .digit-box { width: min(calc((100vw - 20vw - 120px) / var(--n, 4)), 40vh, 150px); }
+  .letter-cell .recog.small { font-size: 18px; min-height: 22px; } .letter-hint { font-size: 18px; min-height: 22px; }
+  .num-card { width: min(26%, 42vh); }
+}
+@media (max-width: 520px) {
+  .spell-row.write { flex-wrap: wrap; }
+  .letter-cell .digit-box { width: min(calc((100vw - 60px) / var(--n, 4)), 30vh); }
+}

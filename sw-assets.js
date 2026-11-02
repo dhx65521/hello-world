@@ -1,5 +1,5 @@
 /* 自动生成，请勿手改：node tools/build.js */
-self.__VERSION = 'd955f653d7';
+self.__VERSION = '34b60a3770';
 self.__ASSETS = [
   "./",
   "./css/style.css",
