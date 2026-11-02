@@ -89,7 +89,8 @@ export async function sessionScene({ subject = 'arith' } = {}) {
     if (!r) return null;
     const m = modelsCache[modelName]; const labels = m.labels || Array.from({ length: r.probs.length }, (_, i) => String(i));
     const probOf = (lab) => { const i = labels.indexOf(String(lab).toUpperCase()); return i >= 0 ? r.probs[i] : 0; };
-    return { label: r.label, prob: r.prob, lowConf: r.prob < (rules.minConfidence || 0.55), probOf };
+    const rankOf = (lab) => { const p = probOf(lab); return r.probs.filter((v) => v > p).length + 1; };
+    return { label: r.label, prob: r.prob, lowConf: r.prob < (rules.minConfidence || 0.55), probOf, rankOf };
   }
   const modelsCache = {}; for (const m of meta.models) modelsCache[m] = await loadModel(m);
 

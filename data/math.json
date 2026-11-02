@@ -10,6 +10,9 @@
   "idleMs": 1500,
   "minConfidence": 0.55,
   "letterTolerance": 0.25,
+  "letterSoft": 0.06,
+  "letterNear": 0.3,
+  "letterRank": 3,
   "reviewRatio": 0.4,
   "wrongShowAnswerMs": 1800,
   "little": {

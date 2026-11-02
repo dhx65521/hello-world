@@ -601,10 +601,11 @@ button, input { font-family: inherit; color: inherit; }
 .copy-pad .digit-box { width: min(36vw, 58vh, 460px); }
 /* 拼写：格子按字母数均分宽度，和图片居中对齐 */
 .spell-row.write { gap: clamp(14px, 2.5vw, 36px); flex-wrap: nowrap; }
-.spell-row.write .spell-pic { width: min(22vw, 50vh, 340px); height: min(22vw, 50vh, 340px); font-size: min(14vw, 32vh, 220px); flex: 0 0 auto; }
+.spell-row.write { --cell: min(calc((100vw - 150px) / (var(--n, 4) + 1.1)), 52vh, 340px); }
+.spell-row.write .spell-pic { width: var(--cell); height: var(--cell); font-size: calc(var(--cell) * 0.62); flex: 0 0 auto; }
 .spell-write { align-items: center; gap: 10px; }
 .letter-boxes { gap: clamp(6px, 1vw, 14px); }
-.letter-cell .digit-box { width: min(calc((100vw - 34vw - 160px) / var(--n, 4)), 50vh, 340px); }
+.letter-cell .digit-box { width: var(--cell); }
 .letter-cell .recog.small { font-size: 30px; min-height: 36px; }
 .letter-hint { min-height: 34px; font-size: 30px; }
 .little-area { padding: 6px 0; }
@@ -613,11 +614,38 @@ button, input { font-family: inherit; color: inherit; }
   .copy-row .num-card.model, .copy-pad .digit-box { width: min(34vw, 48vh); }
   .copy-pad .recog { top: -34px; }
   .spell-row.write .spell-pic { width: min(20vw, 40vh, 150px); height: min(20vw, 40vh, 150px); font-size: min(12vw, 24vh, 90px); }
-  .letter-cell .digit-box { width: min(calc((100vw - 20vw - 120px) / var(--n, 4)), 40vh, 150px); }
+  .spell-row.write { --cell: min(calc((100vw - 110px) / (var(--n, 4) + 1.1)), 40vh, 150px); }
   .letter-cell .recog.small { font-size: 18px; min-height: 22px; } .letter-hint { font-size: 18px; min-height: 22px; }
   .num-card { width: min(26%, 42vh); }
 }
 @media (max-width: 520px) {
   .spell-row.write { flex-wrap: wrap; }
-  .letter-cell .digit-box { width: min(calc((100vw - 60px) / var(--n, 4)), 30vh); }
+  .spell-row.write { --cell: min(calc((100vw - 60px) / var(--n, 4)), 30vh); }
 }
+
+/* ========== 书写线：顶线（浅实线）、中线（虚线）、底线（实线） ========== */
+.digit-box.letter-box::before, .digit-box.letter-box::after { display: none; }
+.digit-box.letter-box {
+  background-image:
+    linear-gradient(to right, #C9D6E3 0 100%),
+    repeating-linear-gradient(to right, #C9D6E3 0 10px, transparent 10px 20px),
+    linear-gradient(to right, #B8C7D6 0 100%);
+  background-repeat: no-repeat;
+  background-size: 84% 2px, 84% 2px, 84% 3px;
+  background-position: 50% 15%, 50% 50%, 50% 85%;
+}
+.num-card.model.lined { padding: 0; display: block; overflow: hidden; }
+.lined-svg { width: 100%; height: 100%; display: block; font-family: var(--font); }
+.copy-row .num-card.model.lined { --card: min(36vw, 58vh, 460px); width: var(--card); height: var(--card); }
+@media (max-width: 760px), (max-height: 520px) { .copy-row .num-card.model.lined { --card: min(34vw, 48vh); } }
+
+/* ========== 选词题：图片和选项放大铺满下方 ========== */
+.spell-row.pick { gap: clamp(20px, 4vw, 60px); flex-wrap: nowrap; }
+.spell-row.pick .spell-pic { width: min(34vw, 58vh, 460px); height: min(34vw, 58vh, 460px); font-size: min(22vw, 38vh, 300px); flex: 0 0 auto; }
+.spell-row.pick .word-opts { gap: clamp(10px, 2vh, 20px); }
+.spell-row.pick .word-opt { min-width: min(40vw, 520px); min-height: min(17vh, 130px); font-size: min(6vh, 52px); border-radius: 32px; }
+@media (max-width: 760px), (max-height: 520px) {
+  .spell-row.pick .spell-pic { width: min(30vw, 50vh, 180px); height: min(30vw, 50vh, 180px); font-size: min(20vw, 32vh, 110px); }
+  .spell-row.pick .word-opt { min-width: 40vw; min-height: 13vh; font-size: min(5vh, 26px); }
+}
+@media (max-width: 520px) { .spell-row.pick { flex-wrap: wrap; } .spell-row.pick .word-opt { min-width: 70vw; } }

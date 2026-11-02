@@ -71,7 +71,15 @@ export async function setup(ctx, kind) {
   }
   function renderCopy() {
     prompt.textContent = isLetters ? t('copyLetter', { n: q.n }) : t('copyDigit', { n: q.n });
-    const modelCard = h('button', { class: 'num-card model' + (isLetters ? ' letter' : '') }, ...cardLabel(q.n));
+    // 字母示范卡：SVG 三线格，大写顶住顶线坐在底线，小写 x 高从中线到底线
+    const modelCard = isLetters
+      ? h('button', { class: 'num-card model letter lined', html: `<svg viewBox="0 0 100 100" class="lined-svg">
+          <line x1="8" y1="15" x2="92" y2="15" stroke="#D9C9A3" stroke-width="1.5"/>
+          <line x1="8" y1="50" x2="92" y2="50" stroke="#D9C9A3" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="8" y1="85" x2="92" y2="85" stroke="#C9B68A" stroke-width="2"/>
+          <text x="32" y="85" font-size="97" font-weight="800" text-anchor="middle" fill="#2F3B52">${q.n}</text>
+          <text x="72" y="85" font-size="67" font-weight="800" text-anchor="middle" fill="#6B7A90">${q.n.toLowerCase()}</text></svg>` })
+      : h('button', { class: 'num-card model' }, ...cardLabel(q.n));
     modelCard.addEventListener('click', () => { ctx.audio.sfx('tap'); say.item(q.n); });
     const recog = h('div', { class: 'recog' }, '　');
     box = ctx.makeBox(async () => {
