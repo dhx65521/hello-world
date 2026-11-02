@@ -649,3 +649,9 @@ button, input { font-family: inherit; color: inherit; }
   .spell-row.pick .word-opt { min-width: 40vw; min-height: 13vh; font-size: min(5vh, 26px); }
 }
 @media (max-width: 520px) { .spell-row.pick { flex-wrap: wrap; } .spell-row.pick .word-opt { min-width: 70vw; } }
+/* 小动物：走路时轻轻跳 */
+.farm-svg .animal text { pointer-events: none; }
+.farm-svg .animal .walker { transform-box: fill-box; transform-origin: center bottom; }
+.farm-svg .animal .walker text { transform-box: fill-box; transform-origin: center bottom; animation: trot .5s ease-in-out infinite; }
+.farm-svg .animal:nth-child(2n) .walker text { animation-delay: -.25s; }
+@keyframes trot { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-3px) rotate(3deg); } }
