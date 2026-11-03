@@ -11,6 +11,8 @@ import * as limits from '../core/limits.js';
 import * as speech from '../core/speech.js';
 import * as mistakes from '../core/mistakes.js';
 import { SUBJECTS } from './train.js';
+import * as playlock from '../core/playlock.js';
+import { fmtRemaining } from '../core/farmlogic.js';
 
 let unlockedUntil = 0;
 
@@ -53,6 +55,24 @@ export function parentScene() {
   }
   kidsSec.append(button(t('addKid'), () => go('newKid'), 'soft'));
   wrap.append(kidsSec);
+
+  // 游戏开放规则
+  const lockSec = h('section', {}, h('h2', {}, t('playLockSec')));
+  const row1 = h('div', { class: 'seg' }); const row2 = h('div', { class: 'seg' });
+  const renderLock = () => {
+    row1.innerHTML = ''; row2.innerHTML = '';
+    for (const [v, label] of [[true, t('playLockOn')], [false, t('playLockOff')]]) row1.append(button(label, () => { setSetting('playLock', v); renderLock(); }, playlock.enabled() === v ? 'on' : ''));
+    for (const n of [5, 10, 15, 20]) row2.append(button(t('times', { n }), () => { setSetting('playThreshold', n); renderLock(); }, playlock.threshold() === n ? 'on' : ''));
+  };
+  renderLock();
+  lockSec.append(row1, h('div', { class: 'hint', style: { margin: '8px 0' } }, t('playThreshold')), row2, h('div', { class: 'hint' }, t('playLockHint')));
+  for (const kid of st.kids) {
+    const open = playlock.isOpen(kid);
+    lockSec.append(h('div', { class: 'kid-row' }, h('span', { class: 'kid-row-name' }, kid.name),
+      h('span', { class: 'kid-row-stat' }, open ? t('playStatusOpen', { time: fmtRemaining(playlock.remainingMs(kid)) }) : t('playStatusLocked', { p: playlock.progress(kid), n: playlock.threshold() })),
+      button(open ? t('closeWindow') : t('openOneDay'), () => { update((s2) => { const k = s2.kids.find((x) => x.id === kid.id); k.play = k.play || { progress: 0, openUntil: 0 }; k.play.openUntil = open ? 0 : Date.now() + playlock.WINDOW_MS; }); parentScene(); }, 'small-text')));
+  }
+  wrap.append(lockSec);
 
   wrap.append(seg(t('dailyLimit'), [[1, t('times', { n: 1 })], [2, t('times', { n: 2 })], [3, t('times', { n: 3 })], [5, t('times', { n: 5 })], [0, t('unlimited')]], () => limits.dailyLimit(), (v) => setSetting('dailyLimit', v), t('dailyHint')));
   wrap.append(seg(t('ageGroup'), [['auto', t('groupAuto')], ['little', t('groupLittle')], ['big', t('groupBig')]], () => setting('mathMode') || 'auto', (v) => setSetting('mathMode', v)));

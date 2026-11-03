@@ -12,6 +12,8 @@ import * as FI from '../core/farmiso.js';
 import { t, name as nm } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
 import { loadFactoryData, readyCount } from './factory.js';
+import * as playlock from '../core/playlock.js';
+import { fmtRemaining } from '../core/farmlogic.js';
 
 let farmData = null, decorData = null;
 export async function loadFarmData() {
@@ -32,6 +34,12 @@ export async function homeScene() {
   if (!kid0) return go('kids');
   await Promise.all([loadFarmData(), loadDecorData(), loadFactoryData()]);
   if (!kid0.room) updateKid((k) => { k.room = R.initRoom(); });
+  playlock.settle();
+  // 新开放的窗口：给正在生长的植物安排照料事项（每个窗口一次）
+  updateKid((k) => {
+    const p = k.play || {}; const ou = p.openUntil || 0;
+    if (playlock.isOpen(k) && p.caredFor !== ou) { p.caredFor = ou; k.play = p; k.farm.plots = k.farm.plots.map((pl) => pl ? F.assignCare(pl, farmData.events) : pl); }
+  });
   audio.music('farm');
   const cfg = farmData.events;
   const scale = () => Number(setting('timeScale')) || 1;
@@ -53,14 +61,26 @@ export async function homeScene() {
   // ---------- 右侧 ----------
   const bagBtn = button([h('span', { class: 'emoji' }, '🎒'), h('span', {}, t('bag'))], () => { stop(); go('bag'); }, 'home-btn');
   const ready = readyCount(currentKid());
-  const factoryBtn = button([h('span', { class: 'emoji' }, '🏭'), h('span', {}, t('factory')), ready ? h('span', { class: 'dot' }, String(ready)) : null], () => { stop(); go('factory'); }, 'home-btn');
+  const locked = () => !playlock.isOpen();
+  const lockBadge = () => (locked() ? h('span', { class: 'lock' }, '🔒') : null);
+  const gated = (scene) => () => { if (locked()) return lockDialog(); stop(); go(scene); };
+  const factoryBtn = button([h('span', { class: 'emoji' }, '🏭'), h('span', {}, t('factory')), ready && !locked() ? h('span', { class: 'dot' }, String(ready)) : null, lockBadge()], gated('factory'), 'home-btn');
   const menu = h('div', { class: 'home-menu' },
-    button([h('span', { class: 'emoji' }, '🎓'), h('span', {}, t('learn'))], () => { stop(); go('train'); }, 'home-btn primary'),
-    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shopName'))], () => { stop(); go('shop'); }, 'home-btn'),
+    button([h('span', { class: 'emoji' }, '🎓'), h('span', { class: 'lbl' }, h('span', {}, t('learn')), playlock.enabled() && locked() ? h('small', { class: 'sub' }, `${playlock.progress()}/${playlock.threshold()}`) : null)], () => { stop(); go('train'); }, 'home-btn primary'),
+    button([h('span', { class: 'emoji' }, '🏪'), h('span', {}, t('shopName')), lockBadge()], gated('shop'), 'home-btn'),
     factoryBtn,
     bagBtn,
-    button([h('span', { class: 'emoji' }, '🛏️'), h('span', {}, t('room'))], () => { stop(); go('room'); }, 'home-btn'),
+    button([h('span', { class: 'emoji' }, '🛏️'), h('span', {}, t('room')), lockBadge()], gated('room'), 'home-btn'),
   );
+  function lockDialog() {
+    audio.sfx('wrong');
+    const p = playlock.progress(), n = playlock.threshold();
+    dialog({ emoji: '🔒', title: t('lockTitle'), body: h('div', { class: 'lock-body' },
+      h('div', { class: 'hint' }, t('lockBody', { n })),
+      h('div', { class: 'lock-bar' }, h('i', { style: { width: Math.round(Math.min(1, p / n) * 100) + '%' } })),
+      h('div', { class: 'lock-progress' }, t('lockProgress', { p, n }) + ' · ' + t('lockNeed', { n: Math.max(0, n - p) }))),
+      buttons: [{ label: t('goLearn'), cls: 'primary', onClick: () => { stop(); go('train'); } }, { label: t('ok'), cls: 'soft' }] });
+  }
   const panel = h('div', { class: 'plot-panel' });
     ui.body.append(h('div', { class: 'home-layout stack' }, h('div', { class: 'home-left' }, board), h('div', { class: 'bottom-bar' }, menu, panel)));
 
@@ -84,7 +104,8 @@ export async function homeScene() {
     panel.innerHTML = '';
     if (selected == null) {
       const need = plots().filter((p) => p && (p.needsWater || p.weeds > 0 || p.bug || F.isRipe(p))).length;
-      panel.append(h('div', { class: 'panel-hint' }, need ? t('needCare', { n: need }) : t('tapToPlant')));
+      const banner = playlock.enabled() ? h('div', { class: 'play-banner' + (locked() ? ' locked' : ' open') }, locked() ? t('lockBanner', { n: playlock.needed() }) : t('openBanner', { time: fmtRemaining(playlock.remainingMs()) })) : null;
+      panel.append(banner, h('div', { class: 'panel-hint' }, need ? t('needCare', { n: need }) : t('tapToPlant')));
       return;
     }
     const i = selected, p = plots()[i];
@@ -110,6 +131,7 @@ export async function homeScene() {
 
   // ---------- 农场操作 ----------
   function onPlotTap(i) {
+    if (locked()) return lockDialog();
     const p = plots()[i];
     selected = i;
     if (!p) { renderAll(); audio.sfx('tap'); return openSeedPicker(i); }
@@ -200,7 +222,7 @@ export async function homeScene() {
       k.farm.plots = k.farm.plots.map((p) => {
         if (!p) return p;
         const seed = seedById(p.seed); if (!seed) return null;
-        const r = F.tick(p, seed, now, scale(), cfg);
+        const r = F.tick(p, seed, now, scale(), cfg, Math.random, playlock.isOpen(k));
         if (r.events.length) { changed = true; evs.push(...r.events); }
         return r.plot;
       });
@@ -213,7 +235,7 @@ export async function homeScene() {
       if (evs.includes('bug')) audio.sfx('bug');
       renderAll();
     } else if (!force) {
-      plots().forEach((p, i) => { if (p && !F.isBlocked(p) && !F.isRipe(p)) { const ring = field.querySelector(`[data-ring="${i}"]`); if (ring) { const c = Number(ring.dataset.c); ring.setAttribute('stroke-dashoffset', (c * (1 - F.stageProgress(p, seedById(p.seed), now, scale()))).toFixed(1)); } } });
+      plots().forEach((p, i) => { if (p && !F.isRipe(p)) { const ring = field.querySelector(`[data-ring="${i}"]`); if (ring) { const c = Number(ring.dataset.c); ring.setAttribute('stroke-dashoffset', (c * (1 - F.stageProgress(p, seedById(p.seed), now, scale()))).toFixed(1)); } } });
       if (selected != null) renderPanel();
     }
   }

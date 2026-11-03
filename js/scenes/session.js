@@ -10,6 +10,8 @@ import { loadModel, recognize } from '../ml/digits.js';
 import { t } from '../core/i18n.js';
 import * as limits from '../core/limits.js';
 import * as mistakes from '../core/mistakes.js';
+import * as playlock from '../core/playlock.js';
+import { toast } from '../core/ui.js';
 import { SUBJECTS } from './train.js';
 
 let rules = null;
@@ -141,6 +143,9 @@ export async function sessionScene({ subject = 'arith' } = {}) {
       const ss = (k.subjectStats[subject] = k.subjectStats[subject] || { rounds: 0, answered: 0, correct: 0, wrong: 0, coins: 0 });
       ss.rounds += 1; ss.answered += stats.answered; ss.correct += stats.correct; ss.wrong += stats.wrong; ss.coins += stats.earned;
     });
+    // 完整一局（时间用完或答满 10 题）计入“学习次数”，攒够开放游戏窗口
+    let counted = false, opened = false;
+    if (remaining <= 0 || stats.answered >= 10) { counted = true; opened = playlock.addProgress(1); }
     audio.sfx('fanfare');
     showOverlay(h('div', { class: 'dialog summary' },
       h('div', { class: 'big-emoji' }, stats.net > 0 ? '🎉' : '🙂'),
@@ -152,6 +157,7 @@ export async function sessionScene({ subject = 'arith' } = {}) {
         h('div', { class: 'gold' }, h('b', {}, (stats.net >= 0 ? '+' : '') + stats.net), h('span', {}, t('coinsLabel'))),
       ),
       h('div', { class: 'hint' }, t('nowHave', { n: currentKid().coins })),
+      playlock.enabled() ? h('div', { class: 'lock-line' + (opened ? ' opened' : '') }, opened ? t('openedToast') : counted ? t('sessionCounted', { p: playlock.progress(), n: playlock.threshold() }) : t('sessionNotCounted')) : null,
       h('div', { class: 'row' }, limits.remaining(meta.limitKey) > 0 ? button(t('again'), () => { hideOverlay(); sessionScene({ subject }); }, 'primary big') : null, button('🎓 ' + t('learn'), () => { hideOverlay(); go('train'); }, 'big'), button(t('goHome'), () => { hideOverlay(); go('home'); }, 'big')),
     ));
   }
