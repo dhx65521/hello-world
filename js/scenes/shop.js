@@ -2,6 +2,7 @@
 import { h, scene, button, toast } from '../core/ui.js';
 import { currentKid, updateKid, addCoins } from '../core/store.js';
 import { go } from '../core/router.js';
+import * as playlock from '../core/playlock.js';
 import * as audio from '../core/audio.js';
 import { coinChip, refreshCoins, muteButton } from '../core/widgets.js';
 import { flyCoins, pop, shake, burst } from '../core/fx.js';
@@ -15,6 +16,7 @@ import { t, name as nm, desc, pickLine } from '../core/i18n.js';
 export async function shopScene({ tab = 'seeds', from = 'home' } = {}) {
   const kid = currentKid();
   if (!kid) return go('kids');
+  if (!playlock.isOpen()) return go('home');
   const data = await loadFarmData(); await loadFactoryData(); const decor = await loadDecorData();
   audio.music('shop');
   const ui = scene({ title: '🏪 ' + t('shopName'), theme: 'shop', left: button(from === 'room' ? '🛏️' : '🏠', () => go(from), 'icon'), right: [coinChip(), muteButton()], scroll: true });

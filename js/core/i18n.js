@@ -75,6 +75,11 @@ const DICT = {
     spellPrompt: '👂 这个单词怎么拼？', spellPick: '选一选', spellWrite: '一格写一个字母', spellWriteHint: '{n} 个字母', spellAnswer: '是 {w}', spellTryAgain: '有的字母不对，再写一次 ✏️', spellSpokenZh: '{zh}',
     spellIntro: '看图片、听单词，选出正确的拼写，或者一格写一个字母。答对一题 +{n} 🪙，答错可以再来一次。',
     analytics: '📊 学习分析', noData: '还没有记录', acc: '正确率', missedTop: '常错的题', mastered: '已掌握 {n}', stillDue: '待复习 {n}', wrongTimes: '错 {n} 次', streakOf: '连对 {n}',
+    // 游戏开放窗口
+    lockTitle: '🔒 农场休息中', lockBody: '完整做完 {n} 次学习，就可以玩一天农场、商店和房间。', lockProgress: '已完成 {p} / {n} 次', lockNeed: '再做 {n} 次就能玩啦！', goLearn: '🎓 去学习',
+    openBanner: '🎉 现在可以玩！还剩 {time}', lockBanner: '🔒 再学 {n} 次开放农场', openedToast: '🎉 太棒了！游戏开放 24 小时！', sessionCounted: '这局算一次学习（{p}/{n}）', sessionNotCounted: '做满一局才算一次学习哦',
+    playLockSec: '🔒 游戏开放规则', playLockOn: '开启', playLockOff: '关闭', playThreshold: '攒够几次学习开放 24 小时', playLockHint: '完整做完一局（时间用完或答满 10 题）算一次。锁定期间作物照常生长、金币照常赚，只是不能种地、交易和布置房间。',
+    playStatusOpen: '开放中，还剩 {time}', playStatusLocked: '锁定中，进度 {p}/{n}', openOneDay: '现在开放 24 小时', closeWindow: '关闭窗口',
     // 时间
     sec: '{n} 秒', min: '{n} 分钟', hour: '{n} 小时', hourMin: '{h} 小时 {m} 分', dayHour: '{d} 天 {h} 小时',
   },
@@ -137,6 +142,10 @@ const DICT = {
     spellPrompt: '👂 How do you spell it?', spellPick: 'Pick one', spellWrite: 'One letter per box', spellWriteHint: '{n} letters', spellAnswer: 'It is {w}', spellTryAgain: 'Some letters are wrong, try again ✏️', spellSpokenZh: '{zh}',
     spellIntro: 'Look at the picture, listen to the word, then pick the spelling or write one letter per box. +{n} 🪙 per correct answer; you get a second try.',
     analytics: '📊 Learning report', noData: 'No records yet', acc: 'Accuracy', missedTop: 'Most missed', mastered: 'Mastered {n}', stillDue: 'To review {n}', wrongTimes: 'wrong ×{n}', streakOf: 'streak {n}',
+    lockTitle: '🔒 Farm is resting', lockBody: 'Finish {n} full learning rounds to unlock a day of farm, store and room time.', lockProgress: '{p} / {n} rounds done', lockNeed: '{n} more to play!', goLearn: '🎓 Go learn',
+    openBanner: '🎉 Play time! {time} left', lockBanner: '🔒 {n} more rounds to unlock', openedToast: '🎉 Awesome! Play is open for 24 hours!', sessionCounted: 'This round counts ({p}/{n})', sessionNotCounted: 'Finish a full round for it to count',
+    playLockSec: '🔒 Play unlock rules', playLockOn: 'On', playLockOff: 'Off', playThreshold: 'Rounds needed to unlock 24 hours', playLockHint: 'A round counts when the timer runs out or 10 questions are answered. While locked, crops keep growing and coins are still earned; only farming, trading and decorating are paused.',
+    playStatusOpen: 'Open, {time} left', playStatusLocked: 'Locked, progress {p}/{n}', openOneDay: 'Open for 24 hours now', closeWindow: 'Close window',
     sec: '{n} s', min: '{n} min', hour: '{n} h', hourMin: '{h} h {m} min', dayHour: '{d} d {h} h',
   },
 };

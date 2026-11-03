@@ -2,6 +2,7 @@
 import { h, scene, button, longPress, dialog, showOverlay, hideOverlay, toast } from '../core/ui.js';
 import { currentKid, updateKid } from '../core/store.js';
 import { go } from '../core/router.js';
+import * as playlock from '../core/playlock.js';
 import * as audio from '../core/audio.js';
 import { coinChip, muteButton, kidChip } from '../core/widgets.js';
 import { burst, shake } from '../core/fx.js';
@@ -12,6 +13,7 @@ import { loadDecorData } from './home.js';
 export async function roomScene() {
   const kid0 = currentKid();
   if (!kid0) return go('kids');
+  if (!playlock.isOpen()) return go('home');
   const decorData = await loadDecorData();
   if (!kid0.room) updateKid((k) => { k.room = R.initRoom(); });
   audio.music('home');

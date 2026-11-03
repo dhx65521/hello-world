@@ -655,3 +655,17 @@ button, input { font-family: inherit; color: inherit; }
 .farm-svg .animal .walker text { transform-box: fill-box; transform-origin: center bottom; animation: trot .5s ease-in-out infinite; }
 .farm-svg .animal:nth-child(2n) .walker text { animation-delay: -.25s; }
 @keyframes trot { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-3px) rotate(3deg); } }
+
+/* ========== 游戏开放窗口 ========== */
+.home-btn .lock { position: absolute; top: -6px; right: -6px; font-size: 18px; background: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 0 var(--shadow); }
+.play-banner { width: 100%; border-radius: 14px; padding: 6px 12px; font-weight: 800; font-size: 16px; text-align: center; }
+.play-banner.locked { background: #FFF1CC; color: #8A6D1F; }
+.play-banner.open { background: #E6F7E8; color: var(--green-dark); }
+.lock-body { display: flex; flex-direction: column; gap: 10px; align-items: center; width: min(460px, 80vw); }
+.lock-bar { width: 100%; height: 16px; border-radius: 8px; background: #EEF3F8; overflow: hidden; }
+.lock-bar i { display: block; height: 100%; background: var(--green); border-radius: 8px; }
+.lock-progress { font-weight: 800; }
+.lock-line { font-weight: 700; color: var(--ink-soft); background: #F3F7FB; border-radius: 999px; padding: 6px 16px; font-size: 18px; }
+.lock-line.opened { background: #E6F7E8; color: var(--green-dark); animation: pop .5s ease; }
+.btn.small-text { min-height: 48px; font-size: 16px; padding: 4px 14px; }
+@media (max-width: 760px), (max-height: 520px) { .play-banner { font-size: 13px; padding: 4px 8px; } .home-btn .lock { width: 20px; height: 20px; font-size: 13px; } }

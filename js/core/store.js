@@ -14,6 +14,8 @@ const DEFAULT_SETTINGS = () => ({
   rewardCoins: 1,        // 答对 +N
   timeScale: 1,          // 农场时间倍速（测试模式用，60 = 1 分钟当 1 小时）
   dailyLimit: 2,         // 每天最多开始几局数学（0 = 不限）
+  playLock: true,        // 游戏要靠学习解锁
+  playThreshold: 10,     // 攒够几次学习开放 24 小时
   lang: 'zh',            // 界面语言 zh / en
   mathMode: 'auto',      // auto（按年龄）/ little（听选 + 描写）/ big（手写算式）
   speechRate: 0.9,       // 朗读语速

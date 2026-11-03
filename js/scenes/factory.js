@@ -2,6 +2,7 @@
 import { h, scene, button, toast, loadJSON, sleep } from '../core/ui.js';
 import { currentKid, updateKid, setting } from '../core/store.js';
 import { go } from '../core/router.js';
+import * as playlock from '../core/playlock.js';
 import * as audio from '../core/audio.js';
 import { coinChip, muteButton } from '../core/widgets.js';
 import { burst, flyCoins, pop, shake } from '../core/fx.js';
@@ -25,6 +26,7 @@ export function readyCount(kid) { return (kid?.factory?.slots || []).filter((j) 
 export async function factoryScene() {
   const kid = currentKid();
   if (!kid) return go('kids');
+  if (!playlock.isOpen()) return go('home');
   await Promise.all([loadFarmData(), loadFactoryData()]);
   audio.music('shop');
   const ui = scene({ title: t('factoryTitle'), theme: 'shop', left: button('🏠', () => { stop(); go('home'); }, 'icon'), right: [coinChip(), muteButton()], scroll: true });
